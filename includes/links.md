@@ -1,0 +1,14 @@
+[redux-site]: https://redux.isu.edu/
+[redux-api]: https://redux.isu.edu/api/redux/
+[redux-swagger]: https://redux.isu.edu/api/redux/swagger/index.html
+[redux-discord]: https://discord.gg/sEC3rTXn2Z
+[redux-org]: https://github.com/ReduxISU
+[repo-redux]: https://github.com/ReduxISU/Redux
+[repo-gui]: https://github.com/ReduxISU/Redux_GUI
+[repo-quantum]: https://github.com/ReduxISU/quantumsolver
+[repo-spade]: https://github.com/ReduxISU/SPADE
+[repo-mcp]: https://github.com/ReduxISU/mcpredux
+[repo-vr]: https://github.com/ReduxISU/Redux_VR
+[repo-rbs]: https://github.com/ReduxISU/Redux_Build_System
+[repo-admin]: https://github.com/ReduxISU/admin
+[repo-docs]: https://github.com/ReduxISU/Redux_Documentation

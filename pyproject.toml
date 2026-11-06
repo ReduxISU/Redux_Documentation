@@ -1,0 +1,13 @@
+[project]
+name = "redux-documentation"
+version = "0.1.0"
+description = "Documentation for Humans and Machines on the Redux Project"
+readme = "README.md"
+license = "BSD-3-Clause"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "zensical>=0.1.0",
+]

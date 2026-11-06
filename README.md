@@ -4,6 +4,8 @@ Documentation for humans and machines on [Redux](https://redux.isu.edu/), Idaho 
 University's interactive knowledgebase of canonical computer science problems, solutions, and
 reductions.
 
+**Site:** <https://reduxisu.github.io/Redux_Documentation/>
+
 The site is built with [Zensical](https://zensical.org/docs/) from the Markdown in `docs/`.
 
 ## Preview
@@ -24,6 +26,9 @@ uv run zensical build --strict --clean
 ```
 
 The output goes to `site/`. `--strict` fails on broken internal links and anchors.
+
+Every pull request runs this build as the `build-test / ci` check. A merge to `main` publishes
+the exact site that check built to GitHub Pages.
 
 ## Layout
 

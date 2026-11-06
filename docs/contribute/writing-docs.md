@@ -38,6 +38,14 @@ uv run zensical build --strict --clean
 `--strict` stops the build if any link points at a page or heading that does not exist. Fix every
 warning it prints.
 
+## Get it merged and published
+
+1. Push your branch and open a pull request to `main`.
+2. The **`build-test / ci`** check runs the same strict build. If it fails, open the check's log,
+   fix the warnings it lists, and push again.
+3. Once the check passes and one person approves, you merge your own pull request.
+4. The merge publishes the site that the check built. It is live within a few minutes.
+
 For a one-line fix you can also use the **edit** button (:material-file-edit-outline:) at the top
 right of any page, which opens the file on GitHub.
 

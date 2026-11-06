@@ -17,15 +17,29 @@ The site is built with [Zensical](https://zensical.org/docs/) from Markdown file
 
 ## Preview the site on your computer
 
-You need [uv](https://docs.astral.sh/uv/getting-started/installation/). It installs the right
-Python and Zensical for you.
+=== "On your computer"
 
-```bash
-git clone https://github.com/ReduxISU/Redux_Documentation.git
-cd Redux_Documentation
-uv sync
-uv run zensical serve
-```
+    You need [uv](https://docs.astral.sh/uv/getting-started/installation/). It installs the right
+    Python and Zensical for you.
+
+    ```bash
+    git clone https://github.com/ReduxISU/Redux_Documentation.git
+    cd Redux_Documentation
+    uv sync
+    uv run zensical serve
+    ```
+
+=== "In a devcontainer or Codespaces"
+
+    The repository has a devcontainer that installs everything. In VS Code, open the folder and
+    choose **Reopen in Container**. In Codespaces, create a codespace on `main`. From a terminal,
+    run `devcontainer up --workspace-folder .`.
+
+    Inside the container, start the preview so it can be reached from outside:
+
+    ```bash
+    uv run zensical serve -a 0.0.0.0:27300
+    ```
 
 Open <http://localhost:27300/Redux_Documentation/>. The page reloads each time you save a file.
 

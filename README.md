@@ -19,6 +19,9 @@ uv run zensical serve
 
 Then open <http://localhost:27300/Redux_Documentation/>.
 
+In the devcontainer (`.devcontainer/`, also used by Codespaces), run
+`uv run zensical serve -a 0.0.0.0:27300` instead, so the published port can reach the server.
+
 ## Build
 
 ```bash

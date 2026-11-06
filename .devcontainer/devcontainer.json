@@ -1,0 +1,16 @@
+{
+  "name": "Redux_Documentation",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13",
+  "mounts": [
+    "source=redux-docs-venv,target=${containerWorkspaceFolder}/.venv,type=volume"
+  ],
+  "appPort": [27300],
+  "portsAttributes": {
+    "27300": { "label": "docs preview (zensical serve)", "onAutoForward": "notify" }
+  },
+  "containerUser": "vscode",
+  "remoteUser": "vscode",
+  "updateRemoteUserUID": true,
+  "postStartCommand": "if [ \"$(stat -c %U /workspaces/Redux_Documentation)\" != \"vscode\" ]; then sudo chown -R vscode:vscode /workspaces/Redux_Documentation; fi",
+  "postCreateCommand": "bash .devcontainer/post-create.sh"
+}

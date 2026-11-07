@@ -52,8 +52,8 @@ welcome.
 
     ---
 
-    Add a problem, solver, verifier, reduction, or visualization. Start with the
-    [Redux contributor guides](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/README.md).
+    Add a problem, solver, verifier, reduction, or visualization. Start with
+    [How to contribute](contribute/index.md).
 
 -   :material-file-document-edit: **Improve these docs**
 

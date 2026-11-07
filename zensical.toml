@@ -32,6 +32,7 @@ nav = [
     "learn/visualizations.md",
   ] },
   { "Contribute" = [
+    "contribute/index.md",
     { "Repositories" = [
       "contribute/redux-documentation.md",
     ] },

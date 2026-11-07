@@ -147,7 +147,15 @@ same pull request. A page that isn't in `nav` is hard to find.
 - Give every picture and diagram a sentence of text that says the same thing.
 
 Diagrams are written in [Mermaid](https://zensical.org/docs/authoring/diagrams/). Only flowchart,
-sequence, state, class, and entity-relationship diagrams are supported.
+sequence, state, class, and entity-relationship diagrams are supported. Mermaid draws flowchart
+edges with right-angle bends, which suits maps and pipelines. It is poor for a small graph whose
+point is which nodes connect. Draw that kind of picture as an SVG instead:
+
+- Put the file in [`includes/diagrams/`](https://github.com/ReduxISU/Redux_Documentation/tree/HEAD/includes/diagrams).
+- Add it to the page with `--8<-- "includes/diagrams/<name>.svg"`.
+- Use `currentColor` for every stroke and fill, so it follows light and dark mode.
+- Give it a `<title>`.
+- Show emphasis with line weight or dashes rather than color alone.
 
 ## Link carefully
 

@@ -1,0 +1,30 @@
+<svg viewBox="0 0 360 220" width="360" role="img" aria-labelledby="sat3-clique-title" style="max-width:100%;height:auto">
+<title id="sat3-clique-title">The graph built from the formula: clause 0 nodes on the left, clause 1 nodes on the right, seven edges, with the clique x1_0 to x2_1 drawn thick</title>
+<g fill="currentColor" font-family="monospace" font-size="13" text-anchor="middle">
+<text x="60" y="18">clause 0</text>
+<text x="300" y="18">clause 1</text>
+</g>
+<g stroke="currentColor" fill="none">
+<line x1="100" y1="50" x2="260" y2="120" stroke-width="4"/>
+<line x1="100" y1="50" x2="260" y2="190" stroke-width="1.2"/>
+<line x1="100" y1="120" x2="260" y2="50" stroke-width="1.2"/>
+<line x1="100" y1="120" x2="260" y2="120" stroke-width="1.2"/>
+<line x1="100" y1="120" x2="260" y2="190" stroke-width="1.2"/>
+<line x1="100" y1="190" x2="260" y2="50" stroke-width="1.2"/>
+<line x1="100" y1="190" x2="260" y2="120" stroke-width="1.2"/>
+<rect x="20" y="36" width="80" height="28" rx="6" stroke-width="1.5"/>
+<rect x="20" y="106" width="80" height="28" rx="6" stroke-width="1.5"/>
+<rect x="20" y="176" width="80" height="28" rx="6" stroke-width="1.5"/>
+<rect x="260" y="36" width="80" height="28" rx="6" stroke-width="1.5"/>
+<rect x="260" y="106" width="80" height="28" rx="6" stroke-width="1.5"/>
+<rect x="260" y="176" width="80" height="28" rx="6" stroke-width="1.5"/>
+</g>
+<g fill="currentColor" font-family="monospace" font-size="14" text-anchor="middle" dominant-baseline="central">
+<text x="60" y="50">x1_0</text>
+<text x="60" y="120">x2_0</text>
+<text x="60" y="190">!x3_0</text>
+<text x="300" y="50">!x1_1</text>
+<text x="300" y="120">x2_1</text>
+<text x="300" y="190">x3_1</text>
+</g>
+</svg>

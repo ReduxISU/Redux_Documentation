@@ -32,11 +32,11 @@ The steps every repository shares, from branching to merging, are in
 | Understand the folders and the five interfaces | [How the code works](how-the-code-works.md) |
 | Check my work, or fix a red check on my pull request | [Building and testing](building-and-testing.md) |
 | Fix an error message | [Troubleshooting](troubleshooting.md) |
-| Add a new problem | [Adding a problem](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-problem.md) |
-| Add a way to solve a problem (a solver) | [Adding a solver](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-solver.md) |
-| Add a way to check an answer (a verifier) | [Adding a verifier](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-verifier.md) |
-| Add a reduction from one problem to another | [Adding a reduction](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-reduction.md) |
-| Add a visualization (a picture of a problem) | [Adding a visualization](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-visualization.md) |
+| Add a new problem | [Adding a problem](adding-a-problem.md) |
+| Add a way to solve a problem (a solver) | [Adding a solver](adding-a-solver.md) |
+| Add a way to check an answer (a verifier) | [Adding a verifier](adding-a-verifier.md) |
+| Add a reduction from one problem to another | [Adding a reduction](adding-a-reduction.md) |
+| Add a visualization (a picture of a problem) | [Adding a visualization](adding-a-visualization.md) |
 
 A brand-new problem usually needs all of these, in this order: the problem, then a verifier, a
 solver, and a visualization, then reductions that connect it to other problems. Read

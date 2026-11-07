@@ -187,7 +187,7 @@ If a gate is red and you are not sure why, paste the line into a PR comment and 
 
 CI does not check that these tests exist (see the note just above), so use this section as your checklist. Reviewers will look for them, with one exception: a problem class on its own doesn't need tests of its own, because the shared tests already check it. The tests under "Adding a problem" are optional for that case. A solver, verifier, visualization or reduction still needs the tests listed for it.
 
-**If you used the problem template, you already have most of these tests.** `GET /ProblemTemplate?problemName=...` also gives you a test file, `redux-tests/Problems/NPC_<NAME>/<NAME>_Tests.cs`, with the tests for a new problem already written. The generic ones pass once your code follows the rules. The stub ones contain a `TODO` and fail on purpose until you fill them in. See [adding-a-problem.md, "Where each file in the zip goes"](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-problem.md#where-each-file-in-the-zip-goes). The examples below are for when you add a test by hand, or want to see a finished version of a stub.
+**If you used the problem template, you already have most of these tests.** `GET /ProblemTemplate?problemName=...` also gives you a test file, `redux-tests/Problems/NPC_<NAME>/<NAME>_Tests.cs`, with the tests for a new problem already written. The generic ones pass once your code follows the rules. The stub ones contain a `TODO` and fail on purpose until you fill them in. See [adding-a-problem.md, "Where each file in the zip goes"](adding-a-problem.md#where-each-file-in-the-zip-goes). The examples below are for when you add a test by hand, or want to see a finished version of a stub.
 
 Every example is copied from a real test in the repo, so you can look it up. Lines that start with `// replace:` show what to change for your own problem. Each example sits in a collapsed block under its checklist: click it to open.
 
@@ -201,7 +201,7 @@ Every example is copied from a real test in the repo, so you can look it up. Lin
 
 ### Adding a problem
 
-Details: [adding-a-problem.md, "Tests you write yourself"](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-problem.md#tests-you-write-yourself).
+Details: [adding-a-problem.md, "Tests you write yourself"](adding-a-problem.md#tests-you-write-yourself).
 
 - [ ] The default instance builds, and its fields hold the values you expect.
 - [ ] A malformed instance throws `ProblemParseException`. Use a `[Theory]` with several bad inputs: an empty string, the wrong shape, and a non-number where a number belongs.
@@ -258,7 +258,7 @@ Details: [adding-a-problem.md, "Tests you write yourself"](https://github.com/Re
 
 ### Adding a verifier
 
-Details: [adding-a-verifier.md, "Tests you write yourself"](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-verifier.md#tests-you-write-yourself).
+Details: [adding-a-verifier.md, "Tests you write yourself"](adding-a-verifier.md#tests-you-write-yourself).
 
 - [ ] A valid certificate is accepted.
 - [ ] The smallest valid certificate is accepted (for example, one element).
@@ -329,7 +329,7 @@ Details: [adding-a-verifier.md, "Tests you write yourself"](https://github.com/R
 
 ### Adding a solver
 
-Details: [adding-a-solver.md, "Tests you write yourself"](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-solver.md#tests-you-write-yourself).
+Details: [adding-a-solver.md, "Tests you write yourself"](adding-a-solver.md#tests-you-write-yourself).
 
 - [ ] On the default instance, the solver returns an answer that the verifier accepts.
 - [ ] One or two other small instances that have a solution, each answer accepted by the verifier.
@@ -431,7 +431,7 @@ Details: [adding-a-solver.md, "Tests you write yourself"](https://github.com/Red
 
 ### Adding a reduction
 
-Details: [adding-a-reduction.md, "Tests you write yourself"](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-reduction.md#tests-you-write-yourself).
+Details: [adding-a-reduction.md, "Tests you write yourself"](adding-a-reduction.md#tests-you-write-yourself).
 
 - [ ] The produced instance (`reductionTo`) matches the one you worked out by hand.
 - [ ] `mapSolutions` turns a solution of the FROM problem into the matching solution of the TO problem.
@@ -480,7 +480,7 @@ Details: [adding-a-reduction.md, "Tests you write yourself"](https://github.com/
 
 ### Adding a visualization
 
-Details: [adding-a-visualization.md, "Tests you write yourself"](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/guides/adding-a-visualization.md#tests-you-write-yourself).
+Details: [adding-a-visualization.md, "Tests you write yourself"](adding-a-visualization.md#tests-you-write-yourself).
 
 - [ ] `visualize` returns the payload you expect for a small instance.
 - [ ] `SolvedVisualization` marks the parts of the solution (for example, with the solution color).

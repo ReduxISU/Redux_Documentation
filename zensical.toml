@@ -46,6 +46,8 @@ nav = [
         "contribute/redux/adding-a-reduction.md",
         "contribute/redux/adding-a-visualization.md",
       ] },
+      "contribute/redux-gui.md",
+      "contribute/quantumsolver.md",
       "contribute/redux-documentation.md",
     ] },
   ] },

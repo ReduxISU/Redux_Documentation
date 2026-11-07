@@ -32,8 +32,8 @@ in each project.
 | Repository | What it is | Default branch | Devcontainer | The `build-test / ci` check |
 | --- | --- | --- | --- | --- |
 | [Redux](redux/index.md) | The API, C# on .NET 10 | `CSharpAPI` | yes | required |
-| [Redux_GUI][repo-gui] | The website, Next.js | `ReduxAPI_GUI` | yes | required |
-| [quantumsolver][repo-quantum] | The quantum service, Python | `main` | yes | required |
+| [Redux_GUI](redux-gui.md) | The website, Next.js | `ReduxAPI_GUI` | yes | required |
+| [quantumsolver](quantumsolver.md) | The quantum service, Python | `main` | yes | required |
 | [SPADE][repo-spade] | The instance-parsing library, C# | `main` | yes | runs, but only reports |
 | [mcpredux][repo-mcp] | The MCP server, Python | `main` | yes | required |
 | [Redux_VR][repo-vr] | The VR prototype, TypeScript | `main` | not yet | none yet |

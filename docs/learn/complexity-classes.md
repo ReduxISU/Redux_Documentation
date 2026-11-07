@@ -140,8 +140,8 @@ call [`/Navigation/ComplexityClasses`](../reference/api.md#discovery) and read e
 
 ## How Redux shows it
 
-- The problem dropdown on [redux.isu.edu][redux-site] groups problems by complexity class, and
-  its filter menu narrows the list by class.
+- The problem dropdown on [redux.isu.edu][redux-site] lists problems in order of complexity
+  class, with a tag on each showing its class. Its filter menu narrows the list by class.
 - The ⓘ button on a **solver** shows its growth rate (for example `2^n * n^2 * m` for Clique's
   brute-force solver) and a bucket such as Polynomial or Exponential.
 - Try a brute-force solver on a bigger and bigger instance. Every request stops after 10 seconds,

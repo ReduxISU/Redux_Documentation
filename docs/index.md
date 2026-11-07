@@ -32,13 +32,21 @@ welcome.
     ---
 
     Solve, verify, reduce, and visualize problems in your browser at [redux.isu.edu][redux-site].
+    Start with [your first session](use/first-session.md).
+
+-   :material-school: **Learn the ideas**
+
+    ---
+
+    What P, NP, and NP-complete mean, and how a
+    [reduction](learn/reductions.md) proves a problem is hard.
 
 -   :material-api: **Call the API**
 
     ---
 
-    Everything the site does is a REST call. Browse the calls and try them in
-    [Swagger][redux-swagger].
+    Everything the site does is a REST call. See the [API reference](reference/api.md), or try
+    the calls in [Swagger][redux-swagger].
 
 -   :material-source-pull: **Contribute code**
 

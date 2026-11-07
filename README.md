@@ -44,7 +44,7 @@ the exact site that check built to GitHub Pages.
 
 ## Contributing
 
-Read [Writing docs](docs/contribute/writing-docs.md) before opening a pull request.
+See [Redux_Documentation](docs/contribute/redux-documentation.md) for how to preview the site and get a change merged.
 
 ## License
 

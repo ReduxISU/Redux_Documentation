@@ -59,7 +59,7 @@ welcome.
 
     ---
 
-    Fix a page or write a new one. See [Writing docs](contribute/writing-docs.md).
+    Fix a page or preview the site. See [Redux_Documentation](contribute/redux-documentation.md).
 
 </div>
 

@@ -33,6 +33,7 @@ nav = [
   ] },
   { "Contribute" = [
     "contribute/index.md",
+    "contribute/rbs.md",
     { "Repositories" = [
       "contribute/redux-documentation.md",
     ] },

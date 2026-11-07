@@ -20,7 +20,7 @@ Students and faculty build Redux together, and new contributors are welcome. Eve
 repository works the same way:
 
 1. You change the code inside the repository's **devcontainer**.
-2. You check it with **rbs**, the Redux Build System.
+2. You check it with [**rbs**](rbs.md), the Redux Build System.
 3. You open a **pull request**.
 4. Someone reviews it, and it is merged once the checks pass.
 
@@ -174,7 +174,7 @@ rbs ci
 ```
 
 That runs every step and writes the results to `report.md`. To run one step, name it, for example
-`rbs lint` or `rbs unit-test`.
+`rbs lint` or `rbs unit-test`. [The build system (rbs)](rbs.md) explains every step.
 
 ## Commit
 
@@ -213,7 +213,7 @@ a comment titled **Redux Build System — CI Report**, with one row per step and
 
 If a step fails, read its row and the details under it. Then reproduce the failure on your
 computer with the same rbs step, fix it, and push again. The check runs again, and the same comment
-is updated.
+is updated. [When the check is red](rbs.md#when-the-check-is-red) lists the usual causes.
 
 Other checks, such as code scanning, may also run. Only `build-test / ci` must pass.
 

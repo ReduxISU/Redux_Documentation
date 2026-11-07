@@ -34,9 +34,9 @@ in each project.
 | [Redux](redux/index.md) | The API, C# on .NET 10 | `CSharpAPI` | yes | required |
 | [Redux_GUI](redux-gui.md) | The website, Next.js | `ReduxAPI_GUI` | yes | required |
 | [quantumsolver](quantumsolver.md) | The quantum service, Python | `main` | yes | required |
-| [SPADE][repo-spade] | The instance-parsing library, C# | `main` | yes | runs, but only reports |
-| [mcpredux][repo-mcp] | The MCP server, Python | `main` | yes | required |
-| [Redux_VR][repo-vr] | The VR prototype, TypeScript | `main` | not yet | none yet |
+| [SPADE](spade.md) | The instance-parsing library, C# | `main` | yes | runs, but only reports |
+| [mcpredux](mcpredux.md) | The MCP server, Python | `main` | yes | required |
+| [Redux_VR](redux-vr.md) | The VR prototype, TypeScript | `main` | not yet | none yet |
 | [Redux_Documentation](redux-documentation.md) | This site | `main` | yes | builds the site |
 
 Each repository has exactly one long-lived branch, its **default branch**. Every pull request goes

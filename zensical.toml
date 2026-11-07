@@ -35,6 +35,12 @@ nav = [
     "contribute/index.md",
     "contribute/rbs.md",
     { "Repositories" = [
+      { "Redux" = [
+        "contribute/redux/index.md",
+        "contribute/redux/how-the-code-works.md",
+        "contribute/redux/building-and-testing.md",
+        "contribute/redux/troubleshooting.md",
+      ] },
       "contribute/redux-documentation.md",
     ] },
   ] },

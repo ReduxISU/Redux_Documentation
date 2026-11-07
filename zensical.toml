@@ -17,6 +17,11 @@ nav = [
   { "Contribute" = [
     "contribute/writing-docs.md",
   ] },
+  { "Reference" = [
+    "reference/api.md",
+    "reference/errors.md",
+    "reference/glossary.md",
+  ] },
 ]
 
 [project.theme]

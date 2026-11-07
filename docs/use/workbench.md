@@ -12,10 +12,10 @@ sources:
 This page lists every part of the [redux.isu.edu][redux-site] home page. For a guided first use,
 see [Your first session](first-session.md).
 
-!!! info "Checked against the live site on 2026-11-06"
+!!! info "Checked against the live site on 2026-11-06 and `Redux_GUI@a056f6c` on 2026-11-07"
 
-    Labels are quoted as the site shows them. The site is updated from time to time, so a label
-    may change before this page does.
+    Labels are quoted as the site shows them. The live site is updated from the current code from
+    time to time, so it can lag behind. Where they differ, this page notes it.
 
 ## Page layout
 
@@ -43,7 +43,7 @@ see [Your first session](first-session.md).
 | Control | What it does |
 | --- | --- |
 | **Select problem** | The problem to work on. Choosing one loads its example instance. The page starts on **3SAT**. |
-| Filter button | Narrows the problem list by **Complexity Class** and **Problem Type**. The number on it counts the filters in use. **Clear filters** removes them all. |
+| Filter button | Narrows the problem list by **Complexity Class**, **Problem Type**, and **Decision / Optimization**. The live site doesn't have the last one yet. The number on the button counts the filters in use. **Clear filters** removes them all. |
 | **Problem Instance** | The instance as text. Edit it to try your own. See [Write an instance](instances.md). |
 | Folder button | Loads an instance from a text file. |
 | Download button | Saves the current instance as `query.txt`. |

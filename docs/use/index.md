@@ -25,6 +25,10 @@ Everything runs in your browser, with nothing to install and no account needed.
 | Try Redux for the first time, start to finish | [Your first session](first-session.md) |
 | Look up what a button, row, or field does | [The workbench](workbench.md) |
 | Type in your own problem instance | [Write an instance](instances.md) |
+| Step through a picture, or draw a reduction | [Step through a visualization](visualize.md) |
+| Turn one problem into another, or find what it reduces to | [Reduce one problem to another](reduce.md) |
+| Understand an error message, or a known gap in the site | [Limits and known issues](limits.md) |
+| Use Redux in a course | [Teach with Redux](teaching.md) |
 | Understand the computer science behind it | [Learn](../learn/problems-and-instances.md) |
 
 The site also has its own short guided tour. Select the **Getting started** button on the home

@@ -19,6 +19,10 @@ nav = [
     "use/first-session.md",
     "use/workbench.md",
     "use/instances.md",
+    "use/visualize.md",
+    "use/reduce.md",
+    "use/limits.md",
+    "use/teaching.md",
   ] },
   { "Learn" = [
     "learn/problems-and-instances.md",

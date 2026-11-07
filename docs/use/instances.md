@@ -38,11 +38,14 @@ For five problems, the site checks the format as you type: **3SAT**, **Clique**,
 Cover**, **Graph Coloring**, and **Feedback Arc Set**. A bad instance turns the box's label red
 and reads **Incorrect Format**, with an example to try underneath.
 
-!!! warning "Other problems don't warn you yet"
+For every other problem, the box doesn't warn you. Instead, **Solve** shows the reason the
+instance couldn't be read, such as *Braces not matched*, in place of an answer.
 
-    For every other problem, the site doesn't say when an instance is wrong. **Solve** just
-    shows an empty answer. If that happens, compare your instance with the examples below, or
-    with the problem's example instance, character by character.
+!!! warning "On the live site, today"
+
+    The live site doesn't show that reason yet. **Solve** shows an empty answer instead. If that
+    happens, compare your instance with the examples below, or with the problem's example
+    instance, character by character.
 
 ## The building blocks
 

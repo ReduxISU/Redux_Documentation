@@ -17,7 +17,7 @@ This guide shows how to check your work before you push, and what to do when the
 Some words you will see:
 
 - **Build**: turning the C# source code into a program the computer can run. If the code is broken, the build fails.
-- **Solution file** (`Redux.slnx`): a list that tells .NET which projects belong together (here, the API and its tests). You name it in every command.
+- **Solution file** (`Redux.slnx`): a list that tells .NET which projects belong together (here, the API, its tests, and the small `ContributorStatsSync` tool). You name it in every command.
 - **CI** (continuous integration): a robot on GitHub that builds and tests your code every time you open or update a PR. If it fails, the PR cannot be merged.
 - **Formatting**: spacing, indentation, and similar style rules. They are kept in [.editorconfig](https://github.com/ReduxISU/Redux/blob/HEAD/.editorconfig), and a tool fixes them for you.
 - **Coverage**: the percentage of the code that tests actually run.
@@ -47,7 +47,7 @@ dotnet test Redux.slnx --configuration Release --collect "XPlat Code Coverage"
 Three things about them that surprise people:
 
 1. **Always name `Redux.slnx`.** A bare `dotnet build` in the repo root fails with `error MSB1011`, because the root folder holds both `API.csproj` and `Redux.slnx` and .NET will not guess which one you mean.
-2. **Formatting is part of the build.** [Directory.Build.targets](https://github.com/ReduxISU/Redux/blob/HEAD/Directory.Build.targets) runs `dotnet format Redux.slnx --verify-no-changes` as part of every Release build. Badly formatted code makes the **build** fail. The fix is to run `dotnet format Redux.slnx` first. Note that this check runs only *after* the code compiles. If your code has a compile error, you will see that error first, and the formatting errors only appear once it is fixed. So a build that fails, gets fixed, and then fails again with `WHITESPACE` errors is normal.
+2. **Formatting is part of the build.** [Directory.Build.targets](https://github.com/ReduxISU/Redux/blob/HEAD/Directory.Build.targets) runs `dotnet format Redux.slnx --verify-no-changes` before every Release build of the API project (and before any build when the environment has `CI=true`). Badly formatted code makes the **build** fail. The fix is to run `dotnet format Redux.slnx` first. Note that this check runs only *after* the code compiles. If your code has a compile error, you will see that error first, and the formatting errors only appear once it is fixed. So a build that fails, gets fixed, and then fails again with `WHITESPACE` errors is normal.
 3. **Warnings are errors.** [Directory.Build.props](https://github.com/ReduxISU/Redux/blob/HEAD/Directory.Build.props) sets `TreatWarningsAsErrors`. So a compiler warning (an unused variable, say) fails the build. In practice the compiler is the linter.
 
 **Performance tests** are tests tagged `Category=Performance`. They run with everything else. If one fails, it means "too slow", not "wrong answer". Run it again once to rule out a slow moment on your computer, then look at the code you just added.
@@ -87,10 +87,10 @@ dotnet test Redux.slnx -c Release --no-build --filter "Category!=Performance"
 Success looks like this (your counts will differ):
 
 ```text
-Passed!  - Failed:     0, Passed:  3006, Skipped:     4, Total:  3010, Duration: 45 s - redux-tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:  4434, Skipped:     0, Total:  4434, Duration: 39 s - redux-tests.dll (net10.0)
 ```
 
-"Skipped" tests are on purpose. You are looking for `Failed: 0`. The first run can take a minute or two.
+A non-zero "Skipped" count is on purpose. You are looking for `Failed: 0`. The first run can take a minute or two.
 
 **Step 4. Run the performance tests.**
 
@@ -98,7 +98,7 @@ Passed!  - Failed:     0, Passed:  3006, Skipped:     4, Total:  3010, Duration:
 dotnet test Redux.slnx -c Release --no-build --filter "Category=Performance"
 ```
 
-You should see `Passed!` again (about 25 tests).
+You should see `Passed!` again (25 tests, as of 2026-11-07).
 
 **Step 5. Run only one test, or one test class.** Use this while you are working so you do not wait for thousands of tests. The text after `~` just has to appear somewhere in the test's full name.
 
@@ -110,7 +110,7 @@ dotnet test Redux.slnx -c Release --no-build --filter "FullyQualifiedName~SUBSET
 dotnet test Redux.slnx -c Release --no-build --filter "FullyQualifiedName~redux_tests.SUBSETSUM_Tests"
 ```
 
-The first prints `Passed: 1`, the second `Passed: 34` (at the time of writing). If you see "No test matches the given testcase filter", check your spelling. If you changed code since the last build, leave out `--no-build` so it rebuilds first.
+The first prints `Passed: 1`, the second `Passed: 38` (as of 2026-11-07). If you see "No test matches the given testcase filter", check your spelling. If you changed code since the last build, leave out `--no-build` so it rebuilds first.
 
 Before you push, run all steps once. That is the same thing CI will do.
 
@@ -177,7 +177,7 @@ The report has one line per gate. [The build system (rbs)](../rbs.md) explains t
 | `integration-test` | Starts that image and runs [integration/](https://github.com/ReduxISU/Redux/tree/HEAD/integration/) against it over HTTP | A route stopped answering, or the catalogue changed shape. The test names what it expected. |
 | `push` | After a merge to `CSharpAPI`, publishes the tested image to GHCR. Skipped on PRs. | Not your concern on a PR. |
 
-**About coverage.** `rbs.toml` asks for at least 80% coverage (`coverage-min = 80`). The project was at 89% on 2026-11-06, so the `unit-test` line should be green. If it turns red on your PR, the coverage dropped below 80%, which usually means new code went in without tests. Add tests for the code you write, and coverage stays above the line.
+**About coverage.** `rbs.toml` asks for at least 80% coverage (`coverage-min = 80`). The project was at 89% on 2026-11-07, so the `unit-test` line should be green. If it turns red on your PR, the coverage dropped below 80%, which usually means new code went in without tests. Add tests for the code you write, and coverage stays above the line.
 
 **CI does not check that you wrote tests.** The `build-test / ci` check only makes sure every test that exists passes. A new problem, solver, verifier, or reduction with no tests of its own can still pass it, because the shared tests only check the basics (metadata, names, bad input). That is enough for a problem class on its own, but not for a solver, verifier, visualization or reduction. Coverage won't catch it either: one new class barely moves the overall number. Your own tests are the only thing that checks your code gives the *right answers*. For example, a verifier that rejects every correct answer passes every shared test. Each task guide has a "Tests you write yourself" section and a checklist saying which tests to add, and reviewers will look for them.
 

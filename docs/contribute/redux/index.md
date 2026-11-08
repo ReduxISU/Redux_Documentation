@@ -90,8 +90,11 @@ Then check it:
 | <http://localhost:27000/swagger/index.html> | The Swagger page, listing every API call |
 | <http://localhost:27000/Navigation/Reductions> | A long block of JSON: every reduction, grouped by the problem it starts from |
 
-In Swagger, open a call, select **Try it out**, then **Execute**. Every call has example values
+In Swagger, open a call, select **Try it out**, then **Execute**. Most calls have example values
 filled in. Press `Ctrl+C` in the terminal to stop the API.
+
+In the devcontainer, a `warn: ... Overriding HTTP_PORTS '8080'` line comes first. It is harmless:
+the SDK image sets that variable, and `launchSettings.json` overrides it with port 27000.
 
 To have the API restart each time you save a file, use `dotnet watch` instead:
 
@@ -180,7 +183,7 @@ pull requests, and a weekly job that refreshes contributor information.
   still fail the check. Build with `-c Release` before you push.
 - **Warnings are errors.** An unused variable fails the build.
 - **Class names must be unique, ignoring case.** Redux finds every class by its lowercase name,
-  and two classes with the same name stop the API from starting.
+  and two classes with the same name make every API call except `/health` fail with a 500.
 - **The class name is the ID callers use.** Renaming a class changes the API.
 - **Starter files:** `GET /ProblemTemplate` and its `solver`, `verifier`, `reduction`, and
   `visualization` variants hand you a zip of files to fill in. Find them in Swagger under

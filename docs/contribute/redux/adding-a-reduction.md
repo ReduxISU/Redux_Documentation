@@ -61,9 +61,9 @@ Rules that matter:
 | Class name | Unique across the whole project (see below) | `SubsetSumToPartitionReduction` |
 | Implements | `IReduction<FROM, TO>` | `IReduction<SUBSETSUM, PARTITION>` |
 
-**How Redux finds your reduction.** At startup, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `IReduction` is registered under its **lowercased class name**. Because of that:
+**How Redux finds your reduction.** When it is first used, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `IReduction` is registered under its **lowercased class name**. Because of that:
 
-- Your class name must be unique. Two classes with the same name (ignoring upper/lower case) crash startup.
+- Your class name must be unique. Two classes with the same name (ignoring upper/lower case) make every API call except `/health` fail with a 500, and the tests fail the same way.
 - You do not edit any list. Creating the class is enough.
 - The reduction graph at `/Navigation/Reductions` ([Nav_Reductions.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/Navigation/Nav_Reductions.cs)) is built from the two type arguments of `IReduction<FROM, TO>`. Pick them carefully.
 

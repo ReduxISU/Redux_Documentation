@@ -66,9 +66,9 @@ Rules that matter:
 | Implements | `IVerifier<PROBLEM>` | `IVerifier<SUBSETSUM>` |
 | `verifierName` | Exactly `<Problem Name> Solution Verifier` for validity/feasibility checks, or `<Problem Name> Optimality Verifier` when the verifier also proves optimality; names must be unique per problem ignoring case | `"Subset Sum Solution Verifier"` |
 
-**How Redux finds your verifier.** At startup, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `IVerifier` is registered under its **lowercased class name**. Because of that:
+**How Redux finds your verifier.** When it is first used, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `IVerifier` is registered under its **lowercased class name**. Because of that:
 
-- Your class name must be unique. Two classes with the same name (ignoring upper/lower case) crash startup.
+- Your class name must be unique. Two classes with the same name (ignoring upper/lower case) make every API call except `/health` fail with a 500, and the tests fail the same way.
 - You do not edit any list. Creating the class is enough.
 - The list of verifiers for a problem, at `GET /Navigation/Problem_VerifiersRefactor?chosenProblem=SUBSETSUM` ([Nav_Verifiers.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/Navigation/Nav_Verifiers.cs)), is built from the type argument of `IVerifier<PROBLEM>`. Pick it carefully.
 - Being **listed** is different from being the **default**. Every verifier class for the problem shows up in that list. The default is the one marked `[DefaultFor(typeof(PROBLEM))]` ([Interfaces/DefaultFor.cs](https://github.com/ReduxISU/Redux/blob/HEAD/Interfaces/DefaultFor.cs)), at most one per problem. Older problems on `IProblem<Solver, Verifier, Visualization>` name it in the problem class's `defaultVerifier` instead; to change one of those, edit the problem class (for Subset Sum: [SUBSETSUM_Class.cs](https://github.com/ReduxISU/Redux/blob/HEAD/Problems/NPComplete/NPC_SUBSETSUM/SUBSETSUM_Class.cs)). To add an extra verifier, add no attribute and leave `defaultVerifier` alone. A problem with no default verifier gets `DummyVerifier`, and the verify endpoint answers 400 `no_verifier` for it.
@@ -93,14 +93,14 @@ You can also read any verifier's metadata with `GET /ProblemProvider/info?interf
 
 You have two options. Both give you the same file.
 
-- **Copy it by hand.** The template is [ProblemTemplate/Templates/Verifiers/ProblemVerifier.txt](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/Verifiers/ProblemVerifier.txt). Copy it to your new folder, rename it `<ClassName>.cs`, and replace the placeholders `{PROBLEM}`, `{VERIFIER}`, and `{VERIFIER_PASCAL_CASE}`.
+- **Copy it by hand.** The template is [ProblemTemplate/Templates/Verifiers/ProblemVerifier.txt](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/Verifiers/ProblemVerifier.txt). Copy it to your new folder, rename it `<ClassName>.cs`, and replace the placeholders `{PROBLEM}`, `{VERIFIER}`, and `{VERIFIER_PASCAL_CASE}`. Replace `{DEFAULT_FOR}` with `[DefaultFor(typeof(PROBLEM))]` if this is the problem's default verifier, or delete that line.
 - **Download it from a running API.** Start the API, then call `GET /ProblemTemplate/verifier?problemName=SUBSETSUM&verifierName=Subset Sum Optimality Verifier`. The two query parameters are `problemName` (the problem's class name, for example `SUBSETSUM`) and `verifierName` (the display name; the class name is made from it by removing spaces and odd characters). It returns a zip containing `NPC_SUBSETSUM/Verifiers/SubsetSumOptimalityVerifier.cs` and a README. The code for this is in [ProblemTemplate/ProblemTemplate.cs](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/ProblemTemplate.cs).
 
 **Where each file in the zip goes.** Paths are from the repo root (the folder that contains `Redux.slnx`):
 
 | The file in the zip | Where it goes in the repo | What it is, and what to do with it |
 | --- | --- | --- |
-| `NPC_SUBSETSUM/Verifiers/SubsetSumOptimalityVerifier.cs` | `Problems/NPComplete/NPC_SUBSETSUM/Verifiers/SubsetSumOptimalityVerifier.cs` | Your optimality verifier. Throws `NotImplementedException` until you write it. The zip always uses the `NPC_` prefix: for a problem under `Problems/NPHard/` or `Problems/P/`, use that problem's own folder (`NPH_` or `P_`) and fix the namespace. |
+| `NPC_SUBSETSUM/Verifiers/SubsetSumOptimalityVerifier.cs` | `Problems/NPComplete/NPC_SUBSETSUM/Verifiers/SubsetSumOptimalityVerifier.cs` | Your optimality verifier. Throws `NotImplementedException` until you write it. A verifier downloaded on its own is not marked `[DefaultFor]`; a comment above the class shows the line to add if it should be the default. The zip always uses the `NPC_` prefix: for a problem under `Problems/NPHard/` or `Problems/P/`, use that problem's own folder (`NPH_` or `P_`) and fix the namespace. |
 | `README.md` | Nowhere. It is not copied into the repo. | Reference only: a description of every member you fill in. Read it, then leave it in the zip. |
 
 The tests for your verifier go in the problem's test file (see "Tests you write yourself" below).

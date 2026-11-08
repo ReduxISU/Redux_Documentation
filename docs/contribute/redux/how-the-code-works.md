@@ -40,11 +40,11 @@ Each of those five things is one C# class that implements one interface. You add
 | [AdditionalControllers/](https://github.com/ReduxISU/Redux/tree/HEAD/AdditionalControllers/) | The API itself: [ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs) (solve, verify, reduce, visualize) and [Navigation/](https://github.com/ReduxISU/Redux/tree/HEAD/AdditionalControllers/Navigation/) (listing what exists). |
 | [ProblemTemplate/](https://github.com/ReduxISU/Redux/tree/HEAD/ProblemTemplate/) | The code that generates starter files, plus the template text files in [Templates/](https://github.com/ReduxISU/Redux/tree/HEAD/ProblemTemplate/Templates/). |
 | [redux-tests/](https://github.com/ReduxISU/Redux/tree/HEAD/redux-tests/) | All the tests. |
-| [Tools/](https://github.com/ReduxISU/Redux/tree/HEAD/Tools/) | Helpers that are not about one problem: the quantum server client ([QUANTUM_API_README.md](https://github.com/ReduxISU/Redux/blob/HEAD/Tools/QUANTUM_API_README.md) explains it), and `ContributorStatsSync`, a separate small program that GitHub runs to refresh contributor info. |
+| [Tools/](https://github.com/ReduxISU/Redux/tree/HEAD/Tools/) | Helpers that are not about one problem: the quantum server client ([QUANTUM_API_README.md](https://github.com/ReduxISU/Redux/blob/HEAD/Tools/QUANTUM_API_README.md) explains it), `fill-contributor-counts.sh` (run before the image build to stamp contributor counts), and `ContributorStatsSync`, a separate small program that GitHub runs to refresh contributor info. |
 | [wwwroot/](https://github.com/ReduxISU/Redux/tree/HEAD/wwwroot/) | Static files the API serves as-is: the Swagger page's stylesheet and `contributorInfo.json`. |
-| [Documentation/](https://github.com/ReduxISU/Redux/tree/HEAD/Documentation/) | [production.md](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/production.md) (server operations) and `visualization-types.json` (a list that code and CI read, so do not move or rename it). |
+| [Documentation/](https://github.com/ReduxISU/Redux/tree/HEAD/Documentation/) | [production.md](https://github.com/ReduxISU/Redux/blob/HEAD/Documentation/production.md) (server operations), `visualization-types.json` (a list that code and CI read, so do not move or rename it), and `guides/`, the older in-repo copies of these pages. |
 
-At the repo root, [API.csproj](https://github.com/ReduxISU/Redux/blob/HEAD/API.csproj) is the project, [Redux.slnx](https://github.com/ReduxISU/Redux/blob/HEAD/Redux.slnx) lists the API and the test project together, and [Program.cs](https://github.com/ReduxISU/Redux/blob/HEAD/Program.cs) starts the web server.
+At the repo root, [API.csproj](https://github.com/ReduxISU/Redux/blob/HEAD/API.csproj) is the project, [Redux.slnx](https://github.com/ReduxISU/Redux/blob/HEAD/Redux.slnx) lists the API, the test project and the `ContributorStatsSync` tool together, and [Program.cs](https://github.com/ReduxISU/Redux/blob/HEAD/Program.cs) starts the web server.
 
 ### Inside one problem folder
 
@@ -92,12 +92,12 @@ To add one of these, follow its guide: [adding-a-problem.md](adding-a-problem.md
 
 Older docs say each problem or reduction needs its own controller file. That is no longer true. One controller, [ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs), serves all of them.
 
-When the API starts, `ProblemProvider` scans every class in the program once (`ScanTypes`). It files each class into one of five dictionaries (`Problems`, `Verifiers`, `Solvers`, `Visualizers`, `Reductions`) based on which interface it implements. The dictionary key is the class name in lowercase. Then calls such as `POST /ProblemProvider/solve?solver=<ClassName>` look the class up in the dictionary and create it.
+The first time a request needs it, `ProblemProvider` scans every class in the program once (`ScanTypes`). It files each class into one of five dictionaries (`Problems`, `Verifiers`, `Solvers`, `Visualizers`, `Reductions`) based on which interface it implements. The dictionary key is the class name in lowercase. Then calls such as `POST /ProblemProvider/solve?solver=<ClassName>` look the class up in the dictionary and create it.
 
 What this means for you:
 
 - **No registration.** Creating the class in the right folder is enough.
-- **Class names must be unique across the whole project, ignoring upper and lower case, within each kind of class.** The scan uses `.Add`, so two classes with the same lowercase name throw an error at startup and the whole API fails to start. See [troubleshooting.md](troubleshooting.md).
+- **Class names must be unique across the whole project, ignoring upper and lower case, within each kind of class.** The scan uses `.Add`, so two classes with the same lowercase name throw an error the first time the registry is used: the process starts and `/health` answers, but every other call returns 500, and the tests fail the same way. See [troubleshooting.md](troubleshooting.md).
 - **The class name is the ID** that callers (including the website) use, so renaming a class changes the API.
 - Anything that looks like a problem becomes public. Do not put half-finished classes on a branch you intend to merge.
 
@@ -162,7 +162,7 @@ So: throw a parse exception (or let SPADE or `int.Parse` throw) on bad text. Ret
 
 ## 9. Templates
 
-The folder [ProblemTemplate/Templates/](https://github.com/ReduxISU/Redux/tree/HEAD/ProblemTemplate/Templates/) holds starter files (`PROBLEM_Class.txt`, `Solvers/ProblemSolver.txt`, `Verifiers/ProblemVerifier.txt`, `Visualizations/PROBLEMVisualization.txt`, `ReduceTo/NPC_PROBLEM/Reduction.txt`) with placeholders such as `{NAME}`. You can copy them by hand, or have the running API fill them in and zip them. The generator is [ProblemTemplate/ProblemTemplate.cs](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/ProblemTemplate.cs), and its calls appear in Swagger under "Problem Template" (`GET /ProblemTemplate`, `/ProblemTemplate/reduction`, `/solver`, `/verifier`, `/visualization`). [ProblemTemplate/Templates/README.md](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/README.md) is a field-by-field reference for what each interface member means.
+The folder [ProblemTemplate/Templates/](https://github.com/ReduxISU/Redux/tree/HEAD/ProblemTemplate/Templates/) holds starter files (`PROBLEM_Class.txt`, `Solvers/ProblemSolver.txt`, `Verifiers/ProblemVerifier.txt`, `Visualizations/PROBLEMVisualization.txt`, `ReduceTo/NPC_PROBLEM/Reduction.txt`, `Tests/PROBLEM_Tests.txt`) with placeholders such as `{NAME}`. You can copy them by hand, or have the running API fill them in and zip them. The generator is [ProblemTemplate/ProblemTemplate.cs](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/ProblemTemplate.cs), and its calls appear in Swagger under "Problem Template" (`GET /ProblemTemplate`, `/ProblemTemplate/reduction`, `/solver`, `/verifier`, `/visualization`). [ProblemTemplate/Templates/README.md](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/README.md) is a field-by-field reference for what each interface member means.
 
 ## 10. The test project
 

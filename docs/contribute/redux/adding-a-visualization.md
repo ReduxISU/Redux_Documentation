@@ -64,7 +64,7 @@ The list of types lives in [VisualizationType.cs](https://github.com/ReduxISU/Re
 | `QuantumCircuitQjs` | `API_QUANTUMCIRCUIT` | [QuantumCircuitVis.js](https://github.com/ReduxISU/Redux_GUI/blob/ReduxAPI_GUI/components/Visualization/QuantumCircuitVis.js) | Deutsch, Shor's |
 | `PumpSchedule` | a pump-frame class defined next to the visualization | [PumpSchedulingSvgReact.js](https://github.com/ReduxISU/Redux_GUI/blob/ReduxAPI_GUI/components/Visualization/svgs/PumpSchedulingSvgReact.js) | Pump Scheduling |
 | `DynamicTable` | [`API_TableJSON`](https://github.com/ReduxISU/Redux/blob/HEAD/Interfaces/JSON_Objects/Tables/API_TableJSON.cs) | [DynamicTableSvgReact.js](https://github.com/ReduxISU/Redux_GUI/blob/ReduxAPI_GUI/components/Visualization/svgs/DynamicTableSvgReact.js) | DFA table view, shortest paths |
-| `Unimplemented` | `API_empty` (Sudoku's returns an empty `API_QUANTUMCIRCUIT`) | nothing, on purpose | Convex Hull, Sudoku (see below) |
+| `Unimplemented` | `API_empty` (Sudoku's returns an empty `API_QUANTUMCIRCUIT`) | nothing, on purpose | Convex Hull, Sudoku, Lossless Data Compression (see below) |
 
 Two things that trip people up:
 
@@ -73,7 +73,7 @@ Two things that trip people up:
 
 ## 3. How Redux finds your visualization
 
-At startup, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `IVisualization` is registered under its **lowercased class name**. Because of that:
+When it is first used, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `IVisualization` is registered under its **lowercased class name**. Because of that:
 
 - Your class name must be unique across the whole project, ignoring upper/lower case.
 - The class needs a public constructor with **no arguments**. Redux creates it with `Activator.CreateInstance`. A class that cannot be built this way is silently skipped by the type catalog and breaks the endpoints.
@@ -126,7 +126,7 @@ Problems/NPComplete/NPC_<PROBLEM>/Visualizations/<ClassName>.cs
 
 You have two options. Both give you the same file.
 
-- **Copy it by hand.** The template is [ProblemTemplate/Templates/Visualizations/PROBLEMVisualization.txt](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/Visualizations/PROBLEMVisualization.txt). Copy it to your folder, rename it `<ClassName>.cs`, and replace the placeholders `{PROBLEM}`, `{VISUALIZATION}`, and `{VISUALIZATION_PASCAL_CASE}`.
+- **Copy it by hand.** The template is [ProblemTemplate/Templates/Visualizations/PROBLEMVisualization.txt](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/Visualizations/PROBLEMVisualization.txt). Copy it to your folder, rename it `<ClassName>.cs`, and replace the placeholders `{PROBLEM}`, `{VISUALIZATION}`, and `{VISUALIZATION_PASCAL_CASE}`. Replace `{DEFAULT_FOR}` with `[DefaultFor(typeof(PROBLEM))]` if this is the problem's default visualization, or delete that line.
 - **Download it from a running API.** Start the API, then call `GET /ProblemTemplate/visualization` with two query parameters:
 
   | Parameter | Meaning | Example |
@@ -144,7 +144,7 @@ You have two options. Both give you the same file.
 
   | The file in the zip | Where it goes in the repo | What it is, and what to do with it |
   | --- | --- | --- |
-  | `NPC_CLIQUE/Visualizations/MyCliqueVisualization.cs` | `Problems/NPComplete/NPC_CLIQUE/Visualizations/MyCliqueVisualization.cs` | Your visualization. The zip always uses the `NPC_` prefix: for a problem under `Problems/NPHard/` or `Problems/P/`, use that problem's own folder (`NPH_` or `P_`) and fix the namespace. |
+  | `NPC_CLIQUE/Visualizations/MyCliqueVisualization.cs` | `Problems/NPComplete/NPC_CLIQUE/Visualizations/MyCliqueVisualization.cs` | Your visualization. One downloaded on its own is not marked `[DefaultFor]`; a comment above the class shows the line to add if it should be the default. The zip always uses the `NPC_` prefix: for a problem under `Problems/NPHard/` or `Problems/P/`, use that problem's own folder (`NPH_` or `P_`) and fix the namespace. |
   | `README.md` | Nowhere. It is not copied into the repo. | Reference only: a description of every member you fill in. Read it, then leave it in the zip. |
 
 
@@ -332,7 +332,7 @@ Other things worth knowing:
 - If your renderer throws an error while the factory runs, the GUI catches it and shows a "visualization failed to render" message instead of a blank page. That is a safety net, not a plan. Handle missing fields yourself.
 - The same registry draws a reduction's right-hand picture. A reduction's picture uses the **TO problem's `defaultVisualization`**, so your renderer must work for reductions too.
 - `Unimplemented` is never a registry key. [renderability.js](https://github.com/ReduxISU/Redux_GUI/blob/ReduxAPI_GUI/components/Visualization/svgs/renderability.js) treats it as "no renderer".
-- Redux_GUI has no unit-test setup. Its automated checks are listed in section 7.
+- Redux_GUI's unit tests use Node's built-in test runner (`npm test`), and one of them is the visualization-coverage check. Its automated checks are listed in section 7.
 
 ## 6. Tests
 

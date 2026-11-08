@@ -69,9 +69,9 @@ Rules that matter:
 | Implements | `ISolver<PROBLEM>` | `ISolver<SUBSETSUM>` |
 | `solverName` | Matches one of two name shapes (see section 5) | `"Subset Sum Brute Force"` |
 
-**How Redux finds your solver.** At startup, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `ISolver` is registered under its **lowercased class name**. Because of that:
+**How Redux finds your solver.** When it is first used, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `ISolver` is registered under its **lowercased class name**. Because of that:
 
-- Your class name must be unique. Two classes with the same name (ignoring upper/lower case) crash startup.
+- Your class name must be unique. Two classes with the same name (ignoring upper/lower case) make every API call except `/health` fail with a 500, and the tests fail the same way.
 - You do not edit any list. Creating the class is enough.
 - The list of solvers for a problem, at `GET /Navigation/Problem_SolversRefactor?chosenProblem=SUBSETSUM` ([Nav_Solvers.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/Navigation/Nav_Solvers.cs)), is built from the type argument of `ISolver<PROBLEM>`. Pick it carefully. (`Problem_SolversRefactor` is the controller name with the word "Controller" dropped.)
 - Being **listed** is different from being the **default**. Every solver class for the problem shows up in that list. The default is the one marked `[DefaultFor(typeof(PROBLEM))]` ([Interfaces/DefaultFor.cs](https://github.com/ReduxISU/Redux/blob/HEAD/Interfaces/DefaultFor.cs)), at most one per problem. Older problems on `IProblem<Solver, Verifier, Visualization>` name it in the problem class's `defaultSolver` instead; to change one of those, edit the problem class (for Subset Sum: [SUBSETSUM_Class.cs](https://github.com/ReduxISU/Redux/blob/HEAD/Problems/NPComplete/NPC_SUBSETSUM/SUBSETSUM_Class.cs)). To add an extra solver, add no attribute and leave `defaultSolver` alone. Subset Sum has two solvers: the brute force one is the default, and [FastApproximation.cs](https://github.com/ReduxISU/Redux/blob/HEAD/Problems/NPComplete/NPC_SUBSETSUM/Solvers/FastApproximation.cs) is an extra.
@@ -94,14 +94,14 @@ Success looks like `"{1,12,15}"`. A solver is also used by the visualization end
 
 You have two options. Both give you the same file.
 
-- **Copy it by hand.** The template is [ProblemTemplate/Templates/Solvers/ProblemSolver.txt](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/Solvers/ProblemSolver.txt). Copy it to your new folder, rename it `<ClassName>.cs`, and replace the placeholders `{PROBLEM}`, `{SOLVER}`, and `{SOLVER_PASCAL_CASE}`.
+- **Copy it by hand.** The template is [ProblemTemplate/Templates/Solvers/ProblemSolver.txt](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/Solvers/ProblemSolver.txt). Copy it to your new folder, rename it `<ClassName>.cs`, and replace the placeholders `{PROBLEM}`, `{SOLVER}`, and `{SOLVER_PASCAL_CASE}`. Replace `{DEFAULT_FOR}` with `[DefaultFor(typeof(PROBLEM))]` if this is the problem's default solver, or delete that line.
 - **Download it from a running API.** Start the API, then call `GET /ProblemTemplate/solver?problemName=SUBSETSUM&solverName=My Subset Sum Solver`. The two query parameters are `problemName` (the problem's class name, for example `SUBSETSUM`) and `solverName` (the display name; the class name is made from it by removing spaces and odd characters). It returns a zip containing `NPC_SUBSETSUM/Solvers/MySubsetSumSolver.cs` and a README. The code for this is in [ProblemTemplate/ProblemTemplate.cs](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/ProblemTemplate.cs).
 
 **Where each file in the zip goes.** Paths are from the repo root (the folder that contains `Redux.slnx`):
 
 | The file in the zip | Where it goes in the repo | What it is, and what to do with it |
 | --- | --- | --- |
-| `NPC_SUBSETSUM/Solvers/MySubsetSumSolver.cs` | `Problems/NPComplete/NPC_SUBSETSUM/Solvers/MySubsetSumSolver.cs` | Your solver. Throws `NotImplementedException` until you write it. The zip always uses the `NPC_` prefix: for a problem under `Problems/NPHard/` or `Problems/P/`, use that problem's own folder (`NPH_` or `P_`) and fix the namespace. |
+| `NPC_SUBSETSUM/Solvers/MySubsetSumSolver.cs` | `Problems/NPComplete/NPC_SUBSETSUM/Solvers/MySubsetSumSolver.cs` | Your solver. Throws `NotImplementedException` until you write it. A solver downloaded on its own is not marked `[DefaultFor]`; a comment above the class shows the line to add if it should be the default. The zip always uses the `NPC_` prefix: for a problem under `Problems/NPHard/` or `Problems/P/`, use that problem's own folder (`NPH_` or `P_`) and fix the namespace. |
 | `README.md` | Nowhere. It is not copied into the repo. | Reference only: a description of every member you fill in. Read it, then leave it in the zip. |
 
 The tests for your solver go in the problem's test file (see "Tests you write yourself" below).
@@ -180,7 +180,7 @@ Notice two good habits here:
 | Situation | Common return value | Notes |
 | --- | --- | --- |
 | A solution was found | the certificate, in the problem's `certificateFormat` | for example `{1,12,15}` |
-| There is no solution | `"{}"` (an empty certificate) | the worked example. About 60 solvers do this. Some return `""` or other text, so the convention is not universal. |
+| There is no solution | `"{}"` (an empty certificate) | the worked example. About half of the solvers do this (47 of 84 solver files, as of 2026-11-07). Some return `""` or other text, so the convention is not universal. |
 | The timer expired | `SolveRun.TimedOutAnswer` | the same for every solver (#935). Callers check that the run timed out, not this text. |
 
 Whatever you pick, document it in a comment, and make sure the **verifier handles it** (an empty `{}` certificate must not crash it, it should just return `false` or, if your problem's format rejects it, throw `CertificateParseException`). Prefer `"{}"` or an empty certificate in the problem's own format for "no solution", because the GUI and verifier already understand that shape.
@@ -327,7 +327,7 @@ dotnet test Redux.slnx -c Release --filter "FullyQualifiedName~SUBSETSUM_Solver"
 - **A `solverName` that is just the class name** (`SubsetSumBruteForce`) or a placeholder. Use `"<Problem> <Approach>"` or `"<Person> ... Algorithm"`.
 - **Never checking `timerHasExpired`**, or checking it only once before the loop. Check it inside the loop.
 - **Output that does not match `certificateFormat`.** The verifier will throw `CertificateParseException`, or the GUI will not understand it. Always test your solver's output against the verifier.
-- **Forgetting the template's placeholder return.** The template ends with `return "{}";`, which means "no solution" for every input. Replace it with the real algorithm.
+- **Leaving the template's `NotImplementedException`.** The template's `solve` ends by throwing it, so every call fails with a 500 until you replace it with the real algorithm.
 - **A default instance that takes forever.** Brute force grows exponentially. Keep the problem's `defaultInstance` small.
 - **Guessing the running time.** A wrong `timeComplexity` is a public claim. Leave out claims you are not sure about, and ask in the PR.
 - **Throwing for "no solution"** or for a timeout. Return a documented value instead.

@@ -111,9 +111,9 @@ Rules that matter:
 
 One more detail: only classes whose namespace is exactly `API.Problems.<Folder>.<ProblemFolder>` are listed as top-level problems in the navigation endpoints. A helper problem class nested deeper (for example the `Inherited` folder under `NPC_CLIQUE`) is not listed. Keep your real problem at the top level of its folder.
 
-**How Redux finds your problem.** At startup, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `IProblem` is registered under its **lowercased class name**. Solvers, verifiers, visualizations, and reductions are registered the same way, each in its own list. Because of that:
+**How Redux finds your problem.** When it is first used, `ProblemProvider` ([AdditionalControllers/ProblemProvider.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/ProblemProvider.cs)) scans every class in the project. Any class that implements `IProblem` is registered under its **lowercased class name**. Solvers, verifiers, visualizations, and reductions are registered the same way, each in its own list. Because of that:
 
-- Class names must be unique within each list (ignoring case). Two problem classes both called `SUBSETSUM`, or one called `Subsetsum`, crash startup for everyone.
+- Class names must be unique within each list (ignoring case). Two problem classes both called `SUBSETSUM`, or one called `Subsetsum`, make every API call except `/health` fail with a 500 for everyone.
 - You do not edit any list. Creating the class is enough.
 
 **Endpoints you get for free** once your problem, solver, verifier, and visualization exist (all in `ProblemProvider.cs` unless stated):
@@ -126,9 +126,7 @@ One more detail: only classes whose namespace is exactly `API.Problems.<Folder>.
 | `POST /ProblemProvider/verify?verifier=<VerifierClass>` | Checks a certificate. |
 | `POST /ProblemProvider/visualize?visualization=<VisClass>` | Returns drawing data. |
 | `GET /Navigation/ALL_ProblemsRefactor` and `GET /Navigation/NPC_ProblemsRefactor`, `P_ProblemsRefactor`, `NPHard_ProblemsRefactor` | Your problem appears in the list for its **declared** complexity class. |
-| `GET /Navigation/allInfo` and the other `Navigation/all...` lists ([Nav_Batch.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/Navigation/Nav_Batch.cs)) | Your problem is included automatically. |
-
-> The template README mentions older conventions (a `Reductions` folder, "only NP-Complete problems"). Trust this guide and the code: the folder is `ReduceTo`, and `NPHard/` and `P/` are both in use.
+| `GET /Navigation/Batch/allInfo` and the other `Navigation/Batch/all...` lists ([Nav_Batch.cs](https://github.com/ReduxISU/Redux/blob/HEAD/AdditionalControllers/Navigation/Nav_Batch.cs)) | Your problem is included automatically. |
 
 ## 4. Step by step
 
@@ -136,7 +134,7 @@ One more detail: only classes whose namespace is exactly `API.Problems.<Folder>.
 
 You have two options. Both give you the same files.
 
-- **Copy it by hand.** The templates are in [ProblemTemplate/Templates/](https://github.com/ReduxISU/Redux/tree/HEAD/ProblemTemplate/Templates/). The problem class template is [PROBLEM_Class.txt](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/PROBLEM_Class.txt). Copy it to your new folder, rename it `<NAME>_Class.cs`, and replace `{NAME}`, `{NAME_UPPERCASE}`, and `{NAME_PASCAL_CASE}`.
+- **Copy it by hand.** The templates are in [ProblemTemplate/Templates/](https://github.com/ReduxISU/Redux/tree/HEAD/ProblemTemplate/Templates/). The problem class template is [PROBLEM_Class.txt](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/PROBLEM_Class.txt). Copy it to your new folder, rename it `<NAME>_Class.cs`, and replace `{NAME}` and `{NAME_UPPERCASE}`.
 - **Download it from a running API.** Start the API (see [setup.md](index.md)), then call this, using your problem's human name:
 
   ```bash
@@ -374,7 +372,7 @@ Problem tests live in the test project, one folder per problem:
 redux-tests/Problems/<Prefix>_<NAME>/<NAME>_Tests.cs
 ```
 
-**If you used the template download in Step 1, you already have this file.** If you aren't writing tests, delete it, because its stub tests fail on purpose. If you keep it, also remove the tests for any part you deleted. It is the last file in the zip, `redux-tests/Problems/NPC_<NAME>/<NAME>_Tests.cs`, and it is generated for your problem's name. The generic tests (the default instance builds, bad instances and bad certificates throw the right exceptions, the solver's answer is accepted by the verifier) pass once your code follows the rules. The stub tests (the default instance's fields, a valid certificate, a wrong certificate, no solution, the timer) contain a `TODO` and fail on purpose until you replace each `TODO` with a value you worked out by hand. Copy-paste examples of finished tests are in [building-and-testing.md, section 5](building-and-testing.md#5-required-tests-for-each-kind-of-change).
+**If you used the template download in Step 1, you already have this file.** If you aren't writing tests, delete it, because its stub tests fail on purpose. If you keep it, also remove the tests for any part you deleted. It is the last file in the zip, `redux-tests/Problems/NPC_<NAME>/<NAME>_Tests.cs`, and it is generated for your problem's name. The generic tests (the default instance builds, bad instances and bad certificates throw the right exceptions, the solver's answer is accepted by the verifier, the solver stops when the timer has expired) pass once your code follows the rules. The stub tests (the default instance's fields, a valid certificate, a wrong certificate, no solution) contain a `TODO` and fail on purpose until you replace each `TODO` with a value you worked out by hand. Copy-paste examples of finished tests are in [building-and-testing.md, section 5](building-and-testing.md#5-required-tests-for-each-kind-of-change).
 
 If you copied the template by hand, create the file yourself at that path, using the template [PROBLEM_Tests.txt](https://github.com/ReduxISU/Redux/blob/HEAD/ProblemTemplate/Templates/Tests/PROBLEM_Tests.txt) the same way as the other templates.
 
@@ -488,7 +486,7 @@ A new problem is done when:
 - **Leaving `complexityClass`, `problemType` or `problemVariant` as `Unclassified`.** The generated template declares them as `Unclassified` on purpose. Tests fail with a message naming your class until you pick real values.
 - **Committing half-finished generated files.** A solver, verifier or visualization left with `TODO`s, `Unclassified` values or `NotImplementedException` fails the tests. Finish it, or delete the file and let the placeholder stand in.
 - **A class name with a prefix** such as `NPC_MYPROBLEM`. The folder gets the prefix, the class does not.
-- **Reusing a class name**, even with different capitals. Names are keys, ignoring case. A duplicate crashes startup.
+- **Reusing a class name**, even with different capitals. Names are keys, ignoring case. A duplicate breaks every API call.
 - **Folder and declared class disagree**, or the namespace does not match the folder.
 - **A `defaultInstance` that does not parse.** The empty constructor fails, and the problem vanishes from several endpoints.
 - **Not throwing `ProblemParseException`** (or letting a weird exception escape from the solver instead of the constructor). Garbage input must give a 400, never a 500.

@@ -8,7 +8,11 @@ sources:
   - quantumsolver:integration/**
   - quantumsolver:rbs.toml
   - quantumsolver:pyproject.toml
+  - quantumsolver:gunicorn.conf.py
+  - quantumsolver:.github/workflows/*.yml
   - Redux:Tools/QuantumServerAPI.cs
+  - Redux:Problems/NPComplete/**/Solvers/*QuantumSolver.cs
+  - Redux:Problems/NPComplete/**/Solvers/*GroverSolver.cs
 ---
 
 # quantumsolver
@@ -77,15 +81,19 @@ Every solver endpoint takes a `POST` with a JSON body.
 | Endpoint | Algorithm | Body | Called by Redux's |
 | --- | --- | --- | --- |
 | `/deutsch-quantum` | Deutsch | `[f(0), f(1)]`, for example `[false, true]` | `DeutschQuantumSolver` |
-| `/deutsch-jozsa-quantum` | Deutsch–Jozsa | `{"nbits": 3, "f": [...]}`, with `2^nbits` values | `DeutschJozsaQuantumSolver` |
-| `/bernstein-vazirani-quantum` | Bernstein–Vazirani | `{"nbits": 3, "f": [...]}` | `BernsteinVaziraniQuantumSolver` |
+| `/deutsch-jozsa-quantum` | Deutsch–Jozsa | `{"nbits": 3, "f": [...]}`, with `2^nbits` values, or the bare list | `DeutschJozsaQuantumSolver` |
+| `/bernstein-vazirani-quantum` | Bernstein–Vazirani | `{"nbits": 3, "f": [...]}`, or the bare list | `BernsteinVaziraniQuantumSolver` |
 | `/sat-quantum` | Grover's search | <code>{"boolexpr": "(x1 &#124; !x2) &amp; (x2 &#124; x3)"}</code> | `SATGroverSolver`, `UnstructuredGroverSolver` |
-| `/prime-factorization-quantum` | Shor's | `{"N": 15}`, with N under 512 | `ShorsQuantumSolver` |
+| `/prime-factorization-quantum` | Shor's | `{"N": 15}` or the bare `15`, with N under 512 | `ShorsQuantumSolver` |
 | `/health` (`GET`) | | | the readiness check |
 
-Each answer is a JSON object with an `answer` field, and usually the circuit in `qasm`. A solver
-gets **25 seconds**, in its own process. After that the answer is `{"answer": "timeout"}`, with no
-circuit.
+Redux sends the short forms: a bare list of booleans for the three oracle problems, and a bare
+number for Shor's.
+
+Each answer is a JSON object with an `answer` field, and usually the circuit in `qasm`. Bad input
+gets HTTP 200 too, with the reason in `answer`, for example
+`{"answer": "Input too large (limit < 10 bits)"}`. A solver gets **25 seconds**, in its own
+process. After that the answer is `{"answer": "timeout"}`, with no circuit.
 
 ## Test it
 
@@ -95,6 +103,9 @@ uv run --python 3.12 pytest -v      # the same, on the other supported Python
 uv run ruff check .                 # lint
 uv run black --check .              # formatting; uv run black . fixes it
 ```
+
+`uv run --python 3.12` rebuilds `.venv` for 3.12, and your next plain `uv run` rebuilds it for
+3.13. Each switch takes a few seconds.
 
 The **integration tests** in `integration/` call a running service over HTTP. They read its
 address from `RBS_BASE_URL`. To run them against the service you started:

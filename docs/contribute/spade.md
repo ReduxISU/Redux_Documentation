@@ -4,6 +4,10 @@ sources:
   - SPADE:README.md
   - SPADE:Documentation/**
   - SPADE:DiscreteParser.csproj
+  - SPADE:SPADE.slnx
+  - SPADE:StringParser.cs
+  - SPADE:UtilCollection.cs
+  - SPADE:LICENSE.txt
   - SPADE:grammar/**
   - SPADE:tests/**
   - SPADE:rbs.toml
@@ -59,6 +63,15 @@ with nothing to run. Open it as described in
 On your computer instead, install the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download).
 The library targets .NET 6 and the tests target .NET 10, and SDK 10 builds both.
 
+!!! note "Linux: your clone changes owner"
+
+    With Docker Engine on Linux, including WSL2, the files in your clone belong to user ID 1655
+    after the container starts. The image already has a user with ID 1000, so the container's
+    `vscode` user can't take your ID, and the container then gives the workspace to `vscode`.
+    Inside the container everything works. On your computer, `git` refuses the clone with
+    "dubious ownership" until you run `sudo chown -R "$USER:$USER" .` in it. Codespaces don't
+    mount a folder from your computer, so they aren't affected.
+
 ## Build and test
 
 ```bash
@@ -67,18 +80,26 @@ dotnet test SPADE.slnx -c Release
 dotnet format SPADE.slnx
 ```
 
-The tests are in `tests/SPADE.Tests/`, and use xUnit.
+The tests are in `tests/SPADE.Tests/`, and use xUnit. There are 34 as of 2026-11-07.
 
 ## Change the grammar
 
 The grammar for definition strings is `grammar/coll.g4`, written for
 [ANTLR](https://www.antlr.org/). The parser code next to it is generated from that file, so
-don't edit it by hand. With ANTLR installed, from inside `grammar/`:
+don't edit it by hand.
+
+The devcontainer doesn't include ANTLR. Install the `antlr4-tools` Python package, with
+`uv tool install antlr4-tools` or `pip install antlr4-tools`. On first use it downloads a Java
+runtime and the ANTLR jar. Pass `-v 4.13.2`, the version that generated the committed files, so
+your diff shows only your change. Then, from inside `grammar/`:
 
 ```bash
-antlr4-parse coll.g4 start -gui    # try a rule interactively
-antlr4 coll.g4                     # regenerate the parser after editing coll.g4
+antlr4-parse -v 4.13.2 coll.g4 start -gui    # try a rule interactively
+antlr4 -v 4.13.2 coll.g4                     # regenerate the parser after editing coll.g4
 ```
+
+Without `-v`, `antlr4` looks up the newest release and, as of 2026-11-07, fails with
+`FileNotFoundError` before it generates anything.
 
 Commit the regenerated files together with your change to `coll.g4`.
 
@@ -90,8 +111,11 @@ and runs the tests with a **70%** coverage minimum. There is no image to build o
 !!! warning "The check doesn't fail yet"
 
     SPADE runs rbs with `soft: true`, so the check reports problems without failing. Its coverage
-    is currently well below the 70% minimum. Read the report on your pull request even when the
-    check is green, and add tests for the code you change.
+    is about 14% as of 2026-11-07, well below the 70% minimum. Read the report on your pull request
+    even when the check is green, and add tests for the code you change.
+
+You can run the same pipeline in the devcontainer with `rbs ci`. Expect it to end with the
+coverage failure and exit 1, with `push` blocked: that's the report the check posts.
 
 A second workflow, `ci.yml`, also builds the library and runs the tests.
 
@@ -102,11 +126,14 @@ Redux uses SPADE **only through the published package**, at the version named in
 
 1. **A release.** Raise `<Version>` in `DiscreteParser.csproj` in a pull request, and merge it. Then
    push a tag that matches it exactly, such as `v0.1.3`. The tag starts `publish.yml`, which checks
-   that the tag and the version agree, runs the tests, and publishes the package to NuGet.
+   that the tag and the version agree, runs the tests, packs the library, and publishes the
+   package to NuGet. It signs in with NuGet trusted publishing, so no API key is stored in the
+   repository.
 2. **An update in Redux.** A pull request in Redux raises SPADE's version in `API.csproj`.
 
 !!! note "Unreleased changes"
 
-    As of 2026-11-07, the only published version is 0.1.2, from 2025. Everything merged since
-    then is in `main` but not in Redux. Bear that in mind when SPADE's documentation describes
-    behaviour Redux doesn't show.
+    As of 2026-11-07, the only published version is 0.1.2, from May 2025. No release tag has
+    been pushed since `publish.yml` arrived, so it has never run. Everything merged since 0.1.2 is
+    in `main` but not in Redux. Bear that in mind when SPADE's documentation describes behaviour
+    Redux doesn't show.

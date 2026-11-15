@@ -8,6 +8,8 @@ sources:
   - mcpredux:rbs.toml
   - mcpredux:.devcontainer/**
   - mcpredux:pyproject.toml
+  - mcpredux:.github/workflows/rbs.yml
+  - mcpredux:LICENSE
 ---
 
 # mcpredux
@@ -58,9 +60,13 @@ Then run mcpredux in one of its three modes:
 | `proxy` | `uv run server.py --mode proxy --proxy-url <url of an http server>/mcp` | A client that only speaks stdio, connecting to a remote `http` server |
 
 In `http` mode, <http://localhost:8000/health> answers `ok` once the server is up, without calling
-the API. Inside the devcontainer, add `--host 0.0.0.0` so the published port can reach it. The API
-is then at the address from inside a container: `http://host.docker.internal:27000` with Docker
+the API. Inside the devcontainer, add `--host 0.0.0.0`: by default the server listens only on the
+container's own `127.0.0.1`, so the published port connects but gets an empty reply. The API is
+then at the address from inside a container: `http://host.docker.internal:27000` with Docker
 Desktop, or `http://172.17.0.1:27000` on Linux.
+
+Nobody runs a public `http` server for mcpredux. The `proxy` mode is for an `http` server you or
+your team host yourselves; for everything else, use `stdio`.
 
 To try it from an MCP client that starts servers itself, give the client a command like this:
 
@@ -75,6 +81,10 @@ To try it from an MCP client that starts servers itself, give the client a comma
   }
 }
 ```
+
+One thing to know when you try the tools: `generate_problem` returns graphs in the generator's
+own shape, which CLIQUE and the other graph problems don't accept as they are. See
+[Generators and templates](../reference/api.md#generators-and-templates).
 
 ## Test it
 
@@ -121,8 +131,10 @@ even when nothing has changed. [The build system (rbs)](rbs.md) explains each st
 !!! note "Dependency updates waiting, as of 2026-11-07"
 
     The weekly audit currently finds known vulnerabilities in some dependencies, so the check on
-    `main` is red and no new image is published. Several dependency-update pull requests are open.
-    Merging them is a good first contribution.
+    `main` is red and no new image is published. The open dependency-update pull requests each
+    bump one package, so each still fails the audit on the others. One pull request that updates
+    every flagged package, and so turns the check green, is a good first contribution. Run
+    `rbs audit` to see which packages it flags.
 
 ## Add a tool
 
@@ -134,7 +146,7 @@ for someone who has never seen Redux.
    without one.
 2. Add its name to `EXPECTED_TOOLS` in `tests/test_surface.py`, which lists every tool the server
    must offer.
-3. Add a row to the table at the top of `tests/test_tools.py`: the tool, the arguments to call it
-   with, and the API route and query it should send. The test checks each row against the fake
-   Redux.
+3. Add an entry to `GET_CASES` or `POST_CASES` at the top of `tests/test_tools.py`: the tool, the
+   arguments to call it with, and the API route, query, and body it should send. The test checks
+   each entry against the fake Redux.
 4. Add the tool to the README's table.

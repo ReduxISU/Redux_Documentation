@@ -52,9 +52,9 @@ see [Your first session](first-session.md).
 
 | Control | What it does |
 | --- | --- |
-| **Select visualization** | Which picture to draw. A choice the site can't draw yet is greyed out. |
+| **Select visualization** | Which picture to draw. A choice the site can't draw yet is greyed out and marked *no renderer available*. When it can't draw any of them, the dropdown is disabled and reads *No renderable visualization for this problem*. |
 | **Refresh** | Goes back to the first frame and turns the switches off. |
-| ⏮ ◀ *step* ▶ ⏭ | Steps through the frames: first, back, the current step number, forward, and last. |
+| ⏮ ◀ *step* ▶ ⏭ | Steps through the frames: first, back, the current step number, forward, and last. They're disabled while **Show reduction** or **Highlight gadgets** is on. |
 | **Show reduction** | Draws the reduced problem beside the original. It needs a reduction chosen in the **Reduce** row. |
 | **Highlight gadgets** | When on, pointing at a part of one side lights up the matching part of the other. |
 | **Highlight solution** | Shows the solved picture, with the answer highlighted. With **Show reduction** on, the answer is highlighted on both sides. |
@@ -68,7 +68,7 @@ solver. For what the pictures mean, see [Visualizations](../learn/visualizations
 | --- | --- |
 | **Select Solver** | Which algorithm to run. The problem's default is chosen for you. |
 | **Solve** | Runs the solver on the current instance and shows its answer after **Solution:**. |
-| Download button | Saves the answer to a file. A very long answer is only available this way. |
+| Download button | Saves the answer as `query.txt`. A very long answer is only available this way. |
 
 ### Verify
 
@@ -87,7 +87,7 @@ If the certificate can't be read, the row says so and shows the expected format.
 | **Select Problem To Reduce To** | The target problem. |
 | **Select Reduction** | How to get there: one reduction, or a chain of them joined with ` - `. |
 | **Reduce** | Runs the reduction again. It also runs by itself as soon as a reduction is chosen. |
-| Download button | Saves the reduced instance to a file. |
+| Download button | Saves the reduced instance as `query.txt`. |
 
 The result appears below the controls, for example **Reduced Clique Instance:** followed by the
 new instance. For 3SAT, the page starts out reducing to **Clique** with **Sipser's Clique
@@ -100,9 +100,10 @@ The ⓘ box describes whatever the row has selected. Depending on what that is, 
 | Field | Shown for |
 | --- | --- |
 | **Input**, **Output**, **Definition** | Problems |
-| **Complexity class** | Problems |
+| **Complexity class**, **Problem type**, **Decision / Optimization** | Problems |
 | **Solver type**, **Complexity bucket**, **Big-O** | Solvers |
-| **Reduction cost**, reduction type, and growth rate | Reductions |
+| **Visualization type** | Visualizations |
+| **Reduction cost**, **Reduction type**, **Complexity bucket**, **Big-O** | Reductions |
 | **Source** | The paper or book it comes from |
 | **Code** | A link to its source code on GitHub |
 | **Contributed by** | The people who wrote it |
@@ -122,4 +123,4 @@ been copied to your clipboard."*
 
 You can also link straight to a problem: `https://redux.isu.edu/?problem=CLIQUE` opens the
 workbench on Clique. Use the problem's name as the API spells it, such as `SAT3`, `CLIQUE`, or
-`VERTEXCOVER`. An unknown name opens 3SAT.
+`VERTEXCOVER`, in upper or lower case. An unknown name opens 3SAT.

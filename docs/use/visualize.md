@@ -47,7 +47,8 @@ How many frames there are depends on the visualization:
   and the shortest paths found so far. The DFA, NFA, and Pump Scheduling visualizations also step
   through their work.
 
-The API also gives each step a one-line caption. The website doesn't show those captions yet.
+For some problems, such as Clique and Vertex Cover, the API also gives each step a one-line
+caption. The website doesn't show those captions yet.
 
 ## Show a reduction
 
@@ -75,6 +76,7 @@ on, there are two pictures, separated by a bar you can drag.
 | The dropdown says *No renderable visualization for this problem* | Nobody has written a picture for this problem yet | Use **Solve** and **Verify**, which still work. |
 | The picture didn't change after you edited the instance | The new instance wasn't accepted | See [Write an instance](instances.md#check-that-it-worked). |
 | ▶ and ⏭ do nothing | You are on the last frame already | Most graph problems have only two frames. |
+| The step buttons are greyed out | **Show reduction** or **Highlight gadgets** is on, and stepping is off while they are | Turn both off to step through the frames. |
 
 ## Related
 

@@ -4,7 +4,6 @@ sources:
   - Redux_GUI:pages/index.js
   - Redux_GUI:pages/aboutus/index.js
   - Redux:Interfaces/Tools/ProblemInstanceGenerators.cs
-  - Redux:CITATION.cff
 ---
 
 # Teach with Redux

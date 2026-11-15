@@ -2,6 +2,7 @@
 description: How to preview this documentation site on your computer and get a change to it merged and published.
 sources:
   - Redux_Documentation:zensical.toml
+  - Redux_Documentation:pyproject.toml
   - Redux_Documentation:.devcontainer/**
   - Redux_Documentation:.github/workflows/**
 ---

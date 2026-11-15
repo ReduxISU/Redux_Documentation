@@ -79,7 +79,8 @@ formula with two clauses:
 
 *Clause 0's three nodes are on the left and clause 1's on the right. Every pair across the two
 clauses is joined except `x1_0`–`!x1_1` and `!x3_0`–`x3_1`, which contradict, giving seven edges.
-The thick edge is a clique of size 2.*
+The thick edge is a clique of size 2. In the instance string, Redux writes each edge twice, once
+from each end, so this graph appears with 14 edge entries.*
 
 **Why it works.** A clique of size *k* must use one node from each clause, because nodes in the
 same clause are never joined. Its nodes never contradict, because contradicting nodes are never
@@ -133,7 +134,7 @@ website offers the chain of reductions that gets there. For 3SAT to Vertex Cover
 
 ## The reductions in Redux
 
-As of 2026-11-06, Redux has 19 reductions connecting 20 problems. A thick arrow means the
+As of 2026-11-07, Redux has 19 reductions connecting 20 problems. A thick arrow means the
 reduction records its gadgets.
 
 ```mermaid
@@ -142,7 +143,7 @@ flowchart TD
   SAT3 ==> CLIQUE["Clique"]
   SAT3 --> DM3["3-Dimensional Matching"]
   SAT3 --> GRAPHCOLORING["Graph Coloring"]
-  SAT3 --> ILP["0-1 Integer Programming"]
+  SAT3 --> ILP["0-1 Integer Linear Programming"]
   INDEPENDENTSET["Independent Set"] ==> CLIQUE
   CLIQUE ==> VERTEXCOVER["Vertex Cover"]
   VERTEXCOVER ==> ARCSET["Feedback Arc Set"]
@@ -153,7 +154,7 @@ flowchart TD
   GRAPHCOLORING --> SAT
   HITTINGSET["Exact Hitting Set"] --> EXACTCOVER
   EXACTCOVER --> SUBSETSUM["Subset Sum"]
-  SUBSETSUM --> KNAPSACK["Knapsack"]
+  SUBSETSUM --> KNAPSACK["Knapsack (Binary)"]
   SUBSETSUM --> PARTITION["Partition"]
   PARTITION --> WEIGHTEDCUT["Weighted Cut"]
   DIRECTEDHAMILTONIAN["Directed Hamiltonian Cycle"] --> HAMILTONIAN["Hamiltonian Cycle"]
@@ -167,7 +168,7 @@ flowchart TD
 | 3SAT | Clique | Sipser's Clique Reduction | ✓ | ✓ |
 | 3SAT | 3-Dimensional Matching | Garey-Johnson Reduction | | |
 | 3SAT | Graph Coloring | Karp's Graph Coloring Reduction | | |
-| 3SAT | 0-1 Integer Programming | Karp's 0-1 Integer Linear Programming Reduction | | |
+| 3SAT | 0-1 Integer Linear Programming | Karp's 0-1 Integer Linear Programming Reduction | | |
 | Independent Set | Clique | Clique Reduction | ✓ | ✓ |
 | Clique | Vertex Cover | Sipser's Vertex Cover Reduction | ✓ | ✓ |
 | Vertex Cover | Feedback Arc Set | Lawler-Karp Arc Set Reduction | ✓ | |
@@ -178,7 +179,7 @@ flowchart TD
 | Graph Coloring | SAT | Karp's SAT Reduction | | |
 | Exact Hitting Set | Exact Cover | Exact Cover Reduction | | |
 | Exact Cover | Subset Sum | Karp's Subset Sum Reduction | | |
-| Subset Sum | Knapsack | Feng's Knapsack Reduction | | |
+| Subset Sum | Knapsack (Binary) | Feng's Knapsack Reduction | | |
 | Subset Sum | Partition | Partition Reduction | | |
 | Partition | Weighted Cut | Weighted Cut Reduction | | |
 | Directed Hamiltonian Cycle | Hamiltonian Cycle | Karp's Hamiltonian Reduction | | |

@@ -28,8 +28,7 @@ Redux splits the work in two. The API works out *what* to show: which nodes exis
 of the answer, what the solver tried. It sends that as data. The website then draws the data.
 
 Because the picture is data, other tools can draw the same thing their own way. That includes
-the [Redux VR][repo-vr] prototype, which shows reductions in 3D, and AI assistants that read the
-data directly.
+the [Redux VR][repo-vr] prototype, which shows reductions in 3D.
 
 Each visualization declares a **picture type** that says how to draw it:
 
@@ -42,15 +41,17 @@ Each visualization declares a **picture type** that says how to draw it:
 | A table | DFA and NFA runs, shortest paths |
 | A schedule | Pump Scheduling |
 
-Some problems have no picture yet. On the website their visualizations are greyed out and
-marked *no renderer available*.
+Some problems have no picture yet. On the website, a problem with no visualization has an empty
+**Visualize** box, and a visualization with no renderer is greyed out and reads *No renderable
+visualization for this problem*.
 
 ## Frames: the instance, the steps, the answer
 
 A visualization produces frames in order:
 
 1. **The instance** as it was given, with nothing highlighted.
-2. **The solver's steps**, one frame per step, for solvers that record them.
+2. **The solver's steps**, one frame per step, for solvers that record them. Redux keeps the
+   first 150 steps; after that, the last caption says how many steps were taken in all.
 3. **The solution**, with the answer highlighted.
 
 A solver that records its steps reports each one as an event:

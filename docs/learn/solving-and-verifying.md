@@ -44,21 +44,24 @@ method that is fast on *every* instance.
 
 Redux usually has several solvers for one problem, so you can compare them. Each solver's ⓘ
 button on the website shows its type and how its work grows. For 3SAT and Vertex Cover, as of
-2026-11-06:
+2026-11-07:
 
 | Solver | Type | Work grows like | What it does |
 | --- | --- | --- | --- |
 | 3SAT Backtracking | Backtracking | 2ⁿ · \|φ\| | Tries assignments, but abandons a partial one as soon as a clause is false |
-| Schöning's k-SAT Algorithm | Heuristic | (4/3)ⁿ | Random restarts with random local fixes |
-| WalkSAT | Heuristic | *n* · *m* | Flips one variable at a time toward fewer false clauses. Fast, but it can miss an answer that exists. |
+| PPZ Algorithm | Stochastic | 2^(2*n*/3) | Assigns variables in a random order, forcing any that a clause leaves no choice for. Fast, but it can miss an answer that exists. |
+| Schöning's k-SAT Algorithm | Heuristic, Stochastic | (4/3)ⁿ | Random restarts with random local fixes |
+| WalkSAT Algorithm | Heuristic, Stochastic | *n* · *m* | Flips one variable at a time toward fewer false clauses. Fast, but it can miss an answer that exists. |
 | Vertex Cover Brute Force | Brute force | 2ⁿ · *n* · (*n* + *m*) | Tries every subset of nodes |
-| Vertex Cover Bounded Search Tree | Backtracking | 2ᴷ · (*n* + *m*) | Branches on each edge's two ends, at most *K* deep |
+| Vertex Cover Bounded Search Tree | Backtracking, Parameterized | 2ᴷ · (*n* + *m*) | Branches on each edge's two ends, at most *K* deep |
+| Vertex Cover Buss Kernelization | Brute force, Parameterized | *K* · (*n* + *m*) + 2²ᴷ · *m* | Forces every node with more than *K* edges into the cover, then tries every subset of what is left |
+| Vertex Cover Max-Degree Greedy | Greedy | *n* · (*n* + *m*) | Keeps taking the node that touches the most uncovered edges. Fast, but it can miss a cover of size *K* that exists. |
 | Vertex Cover Approximation | Approximation | *E* | Polynomial, and finds a cover at most twice the smallest |
 
 Here *n* is the number of variables or nodes, *m* the number of clauses or edges, \|φ\| the length
-of the formula, and *K* the cover size asked for. The Bounded Search Tree's work grows with *K*
-rather than *n*, which makes it fast when the answer is small. Algorithms like that are called
-**parameterized**.
+of the formula, and *K* the cover size asked for. The Bounded Search Tree's and Buss
+Kernelization's work grows with *K* rather than *n*, which makes them fast when the answer is
+small. Algorithms like that are called **parameterized**.
 
 An **approximation** algorithm trades exactness for speed. It runs in polynomial time and
 guarantees an answer within a known factor of the best one. A **heuristic** is often fast in

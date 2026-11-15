@@ -107,7 +107,7 @@ NP-complete problem.
 
 ## How Redux labels its problems
 
-Each problem declares one class. As of 2026-11-06 the labels are:
+Each problem declares one class. As of 2026-11-07 the labels are:
 
 | Class | How many | Examples in Redux |
 | --- | ---: | --- |
@@ -123,8 +123,8 @@ it isn't believed to be NP-complete, and Shor's algorithm factors in polynomial 
 computer.
 
 To see the current labels, filter by **Complexity Class** on the website's **Browse** page, or
-call [`/Navigation/ComplexityClasses`](../reference/api.md#discovery) and read each problem's
-`complexityClass`.
+call [`/Navigation/Batch/allInfo`](../reference/api.md#discovery) and read each problem's
+`complexityClass`. `/Navigation/ComplexityClasses` lists the classes themselves.
 
 ## Common misconceptions
 

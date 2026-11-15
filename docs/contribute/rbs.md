@@ -6,6 +6,9 @@ sources:
   - Redux_Build_System:features/src/rbs/**
   - Redux_Build_System:README.md
   - Redux_Build_System:docs/**
+  - Redux_Build_System:rbs_dev.sh
+  - quantumsolver:.github/workflows/rbs.yml
+  - Redux_GUI:package.json
   - Redux:rbs.toml
   - Redux_GUI:rbs.toml
   - quantumsolver:rbs.toml
@@ -84,7 +87,7 @@ ignores both.
 | Option | On | Does |
 | --- | --- | --- |
 | `--variant <name>` | any step, `ci` | Runs one variant, such as one Python version: `rbs unit-test --variant 3.13`. |
-| `--dry-run` | `push`, `ci` | Logs in and tags the image but doesn't publish it. |
+| `--dry-run` | `push`, `ci` | Logs in and tags the image but doesn't publish it. Needs `GITHUB_TOKEN` and `GITHUB_SHA` set. |
 | `--soft` | `report`, `ci` | Reports failures without failing. |
 | `--post` | `report`, `ci` | Posts the report as a pull-request comment. GitHub uses this. |
 
@@ -105,8 +108,9 @@ This is the report from a real run of the website, Redux_GUI, at commit `a056f6c
 
 **Overall: ✅ 7 passed · 0 failed · 1 skipped**
 
-Below the table, a collapsible section for each step lists its findings, such as each lint warning
-with its file, line, and rule.
+Below the table, each step that reports findings gets a collapsible section listing them, such as
+each lint warning with its file, line, and rule. The Python steps report only a summary line; their
+full output is in the check's log.
 
 On a pull request, rbs posts this as one comment titled **Redux Build System — CI Report**, and
 updates it each time the check runs again. It also appears in the run's summary on GitHub, and you
@@ -135,10 +139,10 @@ engine.
 | --- | --- | --- | --- |
 | `audit` | `pip-audit` on the locked dependencies | `npm audit --omit=dev` | `dotnet list package --vulnerable`. Any finding fails. |
 | `format-check` | `black --check` | `biome check` | `dotnet format --verify-no-changes` |
-| `lint` | `ruff check` | `eslint` | `dotnet build -c Release`, where warnings count as errors |
+| `lint` | `ruff check` | `eslint` | `dotnet build -c Release`. In Redux, warnings count as errors. |
 | `typecheck` | skipped | `tsc --noEmit`, skipped with no `tsconfig.json` | skipped, because the build already checks types |
 | `unit-test` | `pytest`, once per Python version listed | `npm test`, skipped with no `test` script | `dotnet test` with coverage |
-| coverage minimum | enforced when `package` is set | not enforced | enforced |
+| coverage minimum | enforced when `package` is set | not enforced | enforced when the tests collect coverage |
 
 | Engine | Used by |
 | --- | --- |
@@ -162,7 +166,8 @@ build.
 1. It starts each service the project depends on, listed in `[[integration.services]]`.
 2. It starts the image it just built.
 3. It waits for each one's `health-path` to answer, by default up to 180 seconds each.
-4. It runs the project's integration command, giving it the image's address in `RBS_BASE_URL`.
+4. It runs the project's integration command, giving it the image's address in `RBS_BASE_URL`
+   and each service's in `RBS_URL_<NAME>`, such as `RBS_URL_REDUX_API`.
 5. It always removes the stack afterwards.
 
 The website, for example, tests its image against the published API image:
@@ -194,7 +199,9 @@ of these hold:
 
 It tags the image twice, first with the short commit hash (`:a056f6c`) and then `:latest`, so
 every published build can be found again. Everywhere else, `push` reports ⏭️ skipped with the
-reason. `rbs push --dry-run` logs in and tags the image without publishing it.
+reason. `rbs push --dry-run` logs in and tags the image without publishing it, from any branch or
+computer. It still needs `GITHUB_TOKEN` and `GITHUB_SHA` in the environment, and reports ❌
+`missing GITHUB_TOKEN, GITHUB_SHA` without them.
 
 ## Configuration: `rbs.toml`
 

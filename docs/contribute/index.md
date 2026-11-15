@@ -11,6 +11,8 @@ sources:
   - quantumsolver:.github/workflows/rbs.yml
   - SPADE:.github/workflows/rbs.yml
   - mcpredux:.github/workflows/rbs.yml
+  - Redux_Documentation:.devcontainer/**
+  - Redux_Documentation:.github/workflows/**
   - admin:.github/**
 ---
 
@@ -83,7 +85,8 @@ cd Redux
 git switch -c feat/936-job-cap origin/CSharpAPI
 ```
 
-The devcontainer expects the folder name to match the repository's.
+The devcontainer expects the folder name to match the repository's. With another name, its
+start command fails, because it looks for `/workspaces/<repository>`.
 
 Name your branch `<type>/<issue>-<short-description>`:
 

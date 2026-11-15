@@ -27,7 +27,8 @@ you add.
 
 **What you see:** the **Solve** row shows *"The solve ran past the 10-second time limit, so it
 was stopped."* and a suggestion. The suggestion usually names faster solvers for the same
-problem, such as *Carraghan–Pardalos* or *Chiba–Nishizeki* for Clique.
+problem, such as *Carraghan–Pardalos* or *Chiba–Nishizeki* for Clique. It appears after
+*Try:* and itself starts with "Try", so it reads *Try: Try a smaller instance…*.
 
 **What to do:** use a smaller instance, or pick one of the suggested solvers in **Select
 Solver**.
@@ -83,7 +84,7 @@ couldn't be read, such as *Braces not matched*, in place of an answer.
 | --- | --- |
 | **Phones** | On narrow screens the tabs at the top disappear and the rows run off the right edge. Use a computer or a tablet. |
 | **Shared links** | Opening a shared link restores only the problem. The instance and other choices go back to their defaults. See [Share](workbench.md#share). |
-| **Step captions** | The API describes each step of a search in a sentence, but the website doesn't show these yet. |
+| **Step captions** | For some problems the API describes each step of a search in a sentence, but the website doesn't show these yet. |
 | **Unreachable targets** | The **Reduce** row lets you pick a target with no reduction path. Nothing happens. |
 | **Problems with no picture** | Some problems have no visualization. The **Visualize** row says *No renderable visualization for this problem*. |
 

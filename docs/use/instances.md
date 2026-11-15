@@ -119,7 +119,7 @@ The exact format of any problem is in its `instanceFormat`, which the API's
 | <code>(x1 &#124; x2 &#124; x3 &#124; x4)</code> for 3SAT | 3SAT allows at most three literals per clause | split the clause, or use SAT |
 | `(({a,b,c},{{a,d}}),2)` | the edge mentions `d`, which isn't in the node set | add `d` to the nodes |
 | `((a,b,c),{{a,b}},2)` | the nodes are in `( )` and the graph isn't wrapped | `(({a,b,c},{{a,b}}),2)` |
-| `{(a,b),(b,c)}` for an undirected graph | `( )` makes the edges directed | `{{a,b},{b,c}}` |
+| `({1,7,12,15,28)` | the `{` is never closed, so the braces don't match | `({1,7,12,15},28)` |
 | `x1 OR x2` | words aren't understood | <code>(x1 &#124; x2)</code> |
 
 ## Related

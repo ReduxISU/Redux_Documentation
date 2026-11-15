@@ -50,8 +50,8 @@ The **Browse** page shows every problem as a card, with filters down the side.
 From 3SAT, as of 2026-11-07, one reduction reaches 4 problems and any number of reductions
 reaches 15.
 
-The other filters narrow the cards by complexity class, problem type, solver type, solver
-complexity, and visualization type. **Clear Filters** removes them all.
+The other filters narrow the cards by complexity class, problem type, decision or optimization,
+solver type, solver complexity, and visualization type. **Clear Filters** removes them all.
 
 ## Common mistakes
 

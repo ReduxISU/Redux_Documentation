@@ -110,12 +110,14 @@ Two failures are common enough to know about:
 
     === "In the devcontainer"
 
-        The dependencies are already installed. Start it so it can be reached from outside the
-        container:
+        The dependencies are already installed:
 
         ```bash
-        npm run dev -- -H 0.0.0.0
+        npm run dev
         ```
+
+        `next dev` listens on every interface, so it needs no `-H` flag to be reached through the
+        devcontainer's published port.
 
 4. Open <http://localhost:3000>. It reloads as you edit. <http://localhost:3000/api/health>
    answers when the server is up.
@@ -150,11 +152,14 @@ whatever is at `RBS_BASE_URL`, `http://localhost:3000` by default.
 **The full run, exactly what the check does:**
 
 ```bash
+rbs build
 rbs integration-test
 ```
 
-rbs builds the image, starts it next to the published API image, waits for both, runs the tests,
-and removes everything. It's the slowest way, because it rebuilds the image each time.
+`rbs build` makes the image. `rbs integration-test` doesn't build anything: it starts the image
+from the last `rbs build` next to the published API image, waits for both, runs the tests, and
+removes everything. Run `rbs ci` to do both, with every other check. It's the slowest way,
+because it rebuilds the image each time.
 
 **The fast loop, while you write a test.** Start a stack once, then re-run only the test you're
 working on:
@@ -165,7 +170,7 @@ docker network create redux-e2e
 docker run -d --name e2e-redux --network redux-e2e ghcr.io/reduxisu/redux:latest
 docker run -d --name e2e-gui --network redux-e2e -p 3101:3000 \
   -e REDUX_BASE_URL=http://e2e-redux:27000/ local/redux_gui:ci
-export RBS_BASE_URL=http://localhost:3101
+export RBS_BASE_URL=http://localhost:3101        # see below if you're in the devcontainer
 
 npx playwright test app.spec.js                 # one file
 npx playwright test -g "solving 3SAT"           # one test, by name
@@ -173,6 +178,11 @@ npx playwright test --headed                    # watch it in a real window
 
 docker rm -f e2e-redux e2e-gui && docker network rm redux-e2e
 ```
+
+`RBS_BASE_URL` follows the same rules as `REDUX_BASE_URL` above. In the devcontainer,
+`localhost:3101` is the container itself and the tests fail with `ECONNREFUSED`. Use
+`http://172.17.0.1:3101` on Linux, or `http://host.docker.internal:3101` with Docker Desktop.
+`--headed` needs a screen, so it works on your computer, not in the devcontainer.
 
 The container serves a compiled copy, so rebuild the image after changing app code. When a test
 fails, open its trace with `npx playwright show-trace test-results/<test>/trace.zip`. It replays the
@@ -231,7 +241,7 @@ You change this repository only for a **brand-new visualization type** that no r
 
 1. **Write the renderer.** Add a React component to `components/Visualization/svgs/` that returns
    an SVG. It receives the API's data as props (`problemData`, plus `solve`, `url`, `gadgetMap`,
-   and `gadgetsOn`), so it never calls the API itself. Start by copying a small renderer such as
+   and `gadgetsOn`), so it never calls the API itself. Start by copying an existing renderer, such as
    `StandardGraphSvgReact.js`.
 2. **Register it** in `components/Visualization/svgs/Visualizations.js`, with one entry in the
    `Visualizations` map, keyed by the type's name:

@@ -7,6 +7,10 @@ sources:
   - Redux_VR:playground/**
   - Redux_VR:tools/**
   - Redux_VR:fixtures/**
+  - Redux_VR:eslint.config.js
+  - Redux_VR:biome.json
+  - Redux_VR:vitest.config.ts
+  - Redux_VR:.nvmrc
 ---
 
 # Redux_VR
@@ -29,7 +33,7 @@ of them yet.
 
     As of 2026-11-07, `main` has **no devcontainer and no check on pull requests**. Nothing runs
     your tests for you, so run them yourself before you open a pull request. Work on a devcontainer
-    and an rbs check exists on the `redux-k12` branch, which hasn't been merged.
+    and an rbs check exists on the `1-redux-k12` branch, which hasn't been merged.
 
 ## Run it
 
@@ -54,12 +58,24 @@ WSL a browser on Windows reaches it at the same address.
     VITE_REDUX_BASE_URL=http://localhost:27000 npm run dev
     ```
 
-    The value is read when the development server starts, so restart it after changing it.
+    The value is read when the development server starts, so restart it after changing it. A
+    trailing slash is fine.
 
 === "Saved data, no API"
 
     Open <http://localhost:5173/?source=fixtures>. The scene uses the API responses saved in
     `fixtures/` instead of calling the API.
+
+!!! warning "A current Redux API makes it fall back to the saved data"
+
+    Redux renamed its `visualizationType` values, for example `Graph D3` to `GraphD3`, and
+    Redux_VR still looks for the old spelling in
+    [`catalog.ts`](https://github.com/ReduxISU/Redux_VR/blob/d1ac9cc/playground/src/api/catalog.ts#L31-L34).
+    Against a Redux built from `CSharpAPI` (checked with `408f18b` on 2026-11-07), every reduction
+    counts as unsupported: the **Reductions** menu says `0 available · 19 not renderable`, and the
+    text in the top left corner reads `fixtures — live API failed: … cannot draw SAT3 (no
+    visualization) + CLIQUE (no visualization)`. What you see is then the saved data, not the
+    API's answer. Fixing that is work in the Redux_VR repository.
 
 ### Useful addresses
 
@@ -67,7 +83,10 @@ WSL a browser on Windows reaches it at the same address.
 | --- | --- |
 | `?reduction=<className>` | Which reduction to show. The default is `SipserReduceToCliqueStandard`. |
 | `?mode=reduction`, `gadgets`, or `solution` | Which correspondences to draw |
+| `?focus=<id>` | Start with one element selected, for example `?focus=x2_2` |
 | `?menu=open` | Start with the reduction menu open |
+| `?world=from` or `to` | Show one side only |
+| `?frame=0` | Show the unsolved frame. The default is the solved one. |
 | `?source=fixtures` | Use the saved data instead of the API |
 | `?static=1` | Freeze the animation, for screenshots you can compare |
 
@@ -75,7 +94,7 @@ WSL a browser on Windows reaches it at the same address.
 
 | Command | What it checks |
 | --- | --- |
-| `npm test` | The unit tests, with vitest. They need no browser and no graphics card. |
+| `npm test` | The unit tests, with vitest (59 as of 2026-11-07). They need no browser and no graphics card. |
 | `npm run lint` | Code problems, with ESLint |
 | `npm run format:check` | Formatting, with Biome. `npm run format` fixes it. |
 | `npm run shoot [name]` | Takes a screenshot of the running development server, into `shots/` |
@@ -104,7 +123,7 @@ What has been checked so far:
 
 | Checked by | What |
 | --- | --- |
-| tests | The flat view, headset detection, the **Enter VR** button, and scene placement |
+| tests | The layout of the flat view, and where the scene is placed in a headset. Nothing tests headset detection or the **Enter VR** button yet. |
 | the emulator | Starting a VR session, drawing for each eye, and controller rays hitting the menu |
 | nobody yet | Whether depth helps students read the graph, comfort, text size in a headset, and frame rate |
 

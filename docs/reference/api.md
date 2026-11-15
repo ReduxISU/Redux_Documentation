@@ -6,6 +6,7 @@ sources:
   - Redux:Interfaces/Tools/ProblemInstanceGenerators.cs
   - Redux:Tools/ApiParameters.cs
   - Redux:Program.cs
+  - Redux:Interfaces/Steps/StepRecorder.cs
 ---
 
 # Redux API
@@ -14,7 +15,7 @@ This page lists every route of the Redux API: what it takes and what it returns.
 call interactively, use [Swagger][redux-swagger]. For what an error response means, see
 [API errors](errors.md).
 
-!!! info "Verified against `Redux@408f18b` on 2026-11-06"
+!!! info "Verified against `Redux@408f18b` on 2026-11-07"
 
     Every example below was run against the `ghcr.io/reduxisu/redux:408f18b` image. The live site
     can run an older build, so a route added recently may not be there yet. To see exactly what the
@@ -116,8 +117,9 @@ use the visualization's own solver.
 ³ `format=list`, the default, returns a list: `[initial, ...steps, solved]`. `format=frames`
 returns `{"type": …, "payload": …, "frames": […]}`, where `payload` is the initial picture.
 For the `Graph` picture type, each frame is `{event, caption, focus, nodes, edges, phantoms}`.
-A solve stopped by the time limit is still drawn, from the steps it recorded, rather than
-returned as an error.
+A solver records at most 150 steps; past that, the last frame's caption says how many steps
+were taken. A solve stopped by the time limit is still drawn, from the steps it recorded, rather
+than returned as an error.
 
 ## Discovery
 
@@ -141,14 +143,14 @@ no computation.
 | `GET NPC_NavGraph/availableReductions` | `chosenProblem` | Every problem reachable from this one through reductions. |
 | `GET NPC_NavGraph/reductionPath` | `reducingFrom`, `reducingTo` | The shortest chain by number of steps, as a list of steps, each a list of reduction class names. |
 | `GET ComplexityClasses`, `ProblemTypes`, `ProblemVariants`, `ReductionTypes`, `ReductionCosts`, `SolverTypes`, `SolverComplexityBuckets`, `VisualizationTypes` | none | The allowed values of each tag. |
-| `GET ContributorProfile/names`, `/directory`, `/{name}` | none | The people who built Redux, as shown on the website's About page. |
+| `GET ContributorProfile/names`, `/directory`, `/all`, `/{name}` | none | The people who built Redux, as shown on the website's About page. |
 
 ## Generators and templates
 
 | Route | Query | Returns |
 | --- | --- | --- |
 | `GET /ProblemGenerator/Sat3` | `n` (variables), `c` (clauses) | A random 3SAT instance, ready to use. |
-| `GET /ProblemGenerator/UndirectedGraph`, `DirectedGraph` | `n` (nodes), `density` (percent of possible edges), `k` (`-1` for none) | A random graph, written `{{nodes},{edges},k}`. |
+| `GET /ProblemGenerator/UndirectedGraph`, `DirectedGraph` | `n` (nodes), `density` (percent of possible edges), `k` | A random graph, written `{{nodes},{edges},k}`, or `{{nodes},{edges}}` when `k` is left out or `-1`. |
 | `GET /ProblemTemplate` | `problemName` | A zip of starter files for a new problem. |
 | `GET /ProblemTemplate/solver`, `/verifier`, `/visualization` | `problemName` plus `solverName`, `verifierName`, or `visualizationName` | A zip of starter files for that piece. |
 | `GET /ProblemTemplate/reduction` | `problemFrom`, `problemTo`, `reductionName` | A zip of starter files for a reduction. |
@@ -157,7 +159,8 @@ no computation.
 
     The graph generators write `{{nodes},{edges},k}`, but graph problems such as CLIQUE expect
     `((nodes,edges),k)`. Sending a generated graph straight to CLIQUE answers
-    [`instance_parse_error`](errors.md#instance_parse_error).
+    [`instance_parse_error`](errors.md#instance_parse_error). A graph that happens to get no edges
+    is written without the inner braces, as `{{0,1,2,3},}`, which nothing parses.
 
 ## Health
 
@@ -173,6 +176,10 @@ These are how the API behaves today, as of `408f18b`:
   200 and a string instead of a list: `"entered a solver that does not exist"` or
   `"entered a verifier that does not exist"`. `Problem_VisualizationsRefactor` answers with `[]`.
 - The `problemType` parameter of the `Problem_*Refactor` routes is accepted and ignored.
+- `Batch/allSolvers`, `allVerifiers`, `allVisualizations`, and `allVisualizationTypes` include
+  an `IProblem` key, with the placeholders `DummySolver`, `DummyVerifier`, and
+  `DummyVisualization`. `allVisualizations` leaves out problems that have no visualization
+  (10 of 51 as of `408f18b`).
 - A missing required query parameter, or a body that isn't a JSON string, gets ASP.NET's standard
   validation response instead of a Redux error. See
   [Responses that aren't Redux errors](errors.md#responses-that-arent-redux-errors).

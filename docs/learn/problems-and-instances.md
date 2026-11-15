@@ -46,7 +46,7 @@ Other problems use the same building blocks:
 | --- | --- | --- |
 | Subset Sum | `({1,7,12,15},28)` | numbers {1, 7, 12, 15}, target 28 |
 | Clique | `(({a,b,c,d},{{a,b},{b,c},{a,c},{c,d}}),3)` | a graph with nodes a–d and four edges, and *k* = 3 |
-| A directed graph problem | `(({a,b,c},{(a,b),(b,c),(c,a)}),3)` | edges written `(a,b)` go one way, from a to b |
+| Feedback Arc Set | `(({a,b,c},{(a,b),(b,c),(c,a)}),3)` | edges written `(a,b)` go one way, from a to b |
 
 Formulas use their own notation. A 3SAT instance joins clauses with `&` (and), joins the
 literals inside a clause with `|` (or), and writes "not" as `!`:

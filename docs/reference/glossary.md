@@ -97,7 +97,7 @@ Frame
     solved instance.
 
 Picture type
-:   The kind of drawing a visualization produces, such as `Graph` or `BooleanSatisfiability`.
+:   The kind of drawing a visualization produces, such as `GraphD3` or `BooleanSatisfiability`.
     The website picks how to draw each frame by its picture type.
 
 Default

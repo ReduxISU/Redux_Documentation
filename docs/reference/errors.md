@@ -14,7 +14,7 @@ sources:
 This page lists every error the [Redux API](api.md) returns on purpose: its HTTP status, its
 `error` code, when it happens, and what to try instead.
 
-!!! info "Verified against `Redux@408f18b` on 2026-11-06"
+!!! info "Verified against `Redux@408f18b` on 2026-11-07"
 
     Each example body below was produced by a running `ghcr.io/reduxisu/redux:408f18b` image.
     Long `expected` strings are shortened with `…`.
@@ -207,14 +207,14 @@ any.
 
 ```json
 {"error": "time_limit",
- "message": "The solve ran past the 1-second time limit, so it was stopped.",
+ "message": "The solve ran past the 2-second time limit, so it was stopped.",
  "detail": "The solver checked the time limit and stopped before it finished; there is no answer.",
- "limitSeconds": 1, "solver": "CliqueBruteForce", "problem": "Clique",
+ "limitSeconds": 2, "solver": "CliqueBruteForce", "problem": "Clique",
  "options": ["CarraghanPardalos", "ChibaNishizeki"],
  "hint": "Try a smaller instance, or a faster solver for this problem: CarraghanPardalos, ChibaNishizeki."}
 ```
 
-(This example comes from a server configured with a 1-second limit.)
+(This example comes from a server configured with a 2-second limit.)
 
 Two details:
 
